@@ -6,26 +6,26 @@ import {
   LEFT_BORDER_X,
   RIGHT_BORDER_X,
 } from "../globals/rules.js";
-import { Sprite } from "../renderable/sprite.js";
 
 /**
  * Classic first implementation of the Figher Class
  */
-export class Fighter extends Sprite {
+export class Fighter {
   constructor({
-    canvas,
     position,
     velocity,
-    imageSrc,
-    scale = 1,
-    framesMax = 1,
-    offset = { x: 0, y: 0 },
     sprites,
     attackBox = { offset: { x: 0, y: 0 }, width: undefined, height: undefined },
     commandListener,
     playerName,
   }) {
-    super({ canvas, position, imageSrc, scale, framesMax, offset });
+    this.position = position;
+    this.sprites = sprites;
+
+    Object.entries(this.sprites).forEach(
+      ([name, sprite]) => (sprite.position = this.position)
+    );
+    this.sprites.current = this.sprites.idle;
 
     this.velocity = velocity;
     this.height = 150;
@@ -39,11 +39,6 @@ export class Fighter extends Sprite {
       width: attackBox.width,
       height: attackBox.height,
     };
-    this.sprites = sprites;
-    for (const sprite in this.sprites) {
-      sprites[sprite].image = new Image();
-      sprites[sprite].image.src = sprites[sprite].imageSrc;
-    }
 
     this.playerName = playerName;
     this.health = STARTING_HEALTH_POINTS;
@@ -56,6 +51,7 @@ export class Fighter extends Sprite {
       left: 0,
       right: 0,
     };
+
     this.commandListener = commandListener;
     this.listenCommands(this.commandListener);
   }
@@ -76,30 +72,18 @@ export class Fighter extends Sprite {
   }
 
   startRunningLeft() {
-    // if (this.playerName === "Player 1") {
-    //   console.log("START left");
-    // }
     this.controls.left = 5;
   }
 
   stopRunningLeft() {
-    // if (this.playerName === "Player 1") {
-    //   console.log("STOP left");
-    // }
     this.controls.left = 0;
   }
 
   startRunningRight() {
-    // if (this.playerName === "Player 1") {
-    //   console.log("START right");
-    // }
     this.controls.right = 5;
   }
 
   stopRunningRight() {
-    // if (this.playerName === "Player 1") {
-    //   console.log("STOP right");
-    // }
     this.controls.right = 0;
   }
 
@@ -131,12 +115,12 @@ export class Fighter extends Sprite {
       this.position.x < LEFT_BORDER_X
         ? LEFT_BORDER_X
         : this.position.x -
-            this.offset.x * 0.6 +
-            this.image.width / this.framesMax >
+            this.sprites.current.offset.x * 0.6 +
+            this.sprites.current.image.width / this.sprites.current.framesMax >
           RIGHT_BORDER_X
         ? RIGHT_BORDER_X +
-          this.offset.x * 0.6 -
-          this.image.width / this.framesMax
+          this.sprites.current.offset.x * 0.6 -
+          this.sprites.current.image.width / this.sprites.current.framesMax
         : this.position.x;
   }
 
@@ -146,7 +130,7 @@ export class Fighter extends Sprite {
   }
 
   applyGravity() {
-    if (this.position.y + this.height + this.velocity.y >= FLOOR_Y) {
+    if (this.position.y + 150 + this.velocity.y >= FLOOR_Y) {
       this.velocity.y = 0;
       this.position.y = 330;
     } else {
@@ -155,11 +139,11 @@ export class Fighter extends Sprite {
   }
 
   update() {
-    this.draw();
-
-    if (this.dead) return;
-
-    this.animateFrames();
+    if (this.dead) {
+      this.sprites.current.draw();
+      return;
+    }
+    this.sprites.current.update();
     this.updatePlayerPosition();
     this.updateAttackPosition();
     this.applyGravity();
@@ -182,8 +166,11 @@ export class Fighter extends Sprite {
      **/
 
     // is dead
-    if (this.image === this.sprites.death.image) {
-      if (this.framesCurrent === this.sprites.death.framesMax - 1) {
+    if (this.sprites.current.image === this.sprites.death.image) {
+      if (
+        this.sprites.current.framesCurrent ===
+        this.sprites.death.framesMax - 1
+      ) {
         this.isDying = false;
         this.dead = true;
       }
@@ -191,8 +178,11 @@ export class Fighter extends Sprite {
     }
 
     // is attacking
-    if (this.image === this.sprites.attack1.image) {
-      if (this.framesCurrent < this.sprites.attack1.framesMax - 1) {
+    if (this.sprites.current.image === this.sprites.attack1.image) {
+      if (
+        this.sprites.current.framesCurrent <
+        this.sprites.attack1.framesMax - 1
+      ) {
         return false;
       } else {
         this.isAttacking = false;
@@ -200,8 +190,11 @@ export class Fighter extends Sprite {
     }
 
     // is taking hit
-    if (this.image === this.sprites.takeHit.image) {
-      if (this.framesCurrent < this.sprites.takeHit.framesMax - 1) {
+    if (this.sprites.current.image === this.sprites.takeHit.image) {
+      if (
+        this.sprites.current.framesCurrent <
+        this.sprites.takeHit.framesMax - 1
+      ) {
         return false;
       } else {
         this.isGettingHit = false;
@@ -252,63 +245,9 @@ export class Fighter extends Sprite {
    * @param {"idle"|"run"|"jump"|"fall"|"attack1"|"takeHit"|"death"} sprite
    */
   switchSprite(sprite) {
-    switch (sprite) {
-      case "idle":
-        if (this.image !== this.sprites.idle.image) {
-          this.image = this.sprites.idle.image;
-          this.framesMax = this.sprites.idle.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.idle.scale;
-        }
-        break;
-      case "run":
-        if (this.image !== this.sprites.run.image) {
-          this.image = this.sprites.run.image;
-          this.framesMax = this.sprites.run.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.run.scale;
-        }
-        break;
-      case "jump":
-        if (this.image !== this.sprites.jump.image) {
-          this.image = this.sprites.jump.image;
-          this.framesMax = this.sprites.jump.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.jump.scale;
-        }
-        break;
-      case "fall":
-        if (this.image !== this.sprites.fall.image) {
-          this.image = this.sprites.fall.image;
-          this.framesMax = this.sprites.fall.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.fall.scale;
-        }
-        break;
-      case "attack1":
-        if (this.image !== this.sprites.attack1.image) {
-          this.image = this.sprites.attack1.image;
-          this.framesMax = this.sprites.attack1.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.attack1.scale;
-        }
-        break;
-      case "takeHit":
-        if (this.image !== this.sprites.takeHit.image) {
-          this.image = this.sprites.takeHit.image;
-          this.framesMax = this.sprites.takeHit.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.takeHit.scale;
-        }
-        break;
-      case "death":
-        if (this.image !== this.sprites.death.image) {
-          this.image = this.sprites.death.image;
-          this.framesMax = this.sprites.death.framesMax;
-          this.framesCurrent = 0;
-          this.scale = this.sprites.death.scale;
-        }
-        break;
+    if (this.sprites.current !== this.sprites[sprite]) {
+      this.sprites.current = this.sprites[sprite];
+      this.sprites.current.framesCurrent = 0;
     }
   }
 

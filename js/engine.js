@@ -38,7 +38,7 @@ export class GameEngine {
         rectangle2: this.context.player2,
       }) &&
       this.context.player1.isAttacking &&
-      this.context.player1.framesCurrent === 4
+      this.context.player1.sprites.current.framesCurrent === 4
     ) {
       this.context.player2.takeHit();
       this.context.player1.isAttacking = false;
@@ -54,7 +54,7 @@ export class GameEngine {
         rectangle2: this.context.player1,
       }) &&
       this.context.player2.isAttacking &&
-      this.context.player2.framesCurrent === 2
+      this.context.player2.sprites.current.framesCurrent === 2
     ) {
       this.context.player1.takeHit();
       this.context.player2.isAttacking = false;

@@ -5,6 +5,7 @@ export class Sprite {
     imageSrc,
     scale = 1,
     framesMax = 1,
+    animationSpeed = 1,
     offset = { x: 0, y: 0 },
   }) {
     this.canvas = canvas;
@@ -17,7 +18,7 @@ export class Sprite {
     this.framesMax = framesMax;
     this.framesCurrent = 0;
     this.framesElapsed = 0;
-    this.framesHold = 10;
+    this.framesHold = Math.round((60 / framesMax) * animationSpeed);
     this.offset = offset;
   }
 
