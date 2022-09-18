@@ -20,6 +20,7 @@ import { Controller } from "./controller/controller.js";
 /**
  *
  * @param {{config: Config}} config
+ * @returns {Context} Game Context
  */
 export const setup = ({ config }) => {
   const {
@@ -265,7 +266,7 @@ export const setup = ({ config }) => {
 
   const timer = new Timer({ timerElement, roundTime: ROUND_TIME });
 
-  return {
+  return new Context({
     canvas,
     htmlElements: {
       canvasElement,
@@ -296,5 +297,5 @@ export const setup = ({ config }) => {
         fighter: player2,
       },
     ],
-  };
+  });
 };
