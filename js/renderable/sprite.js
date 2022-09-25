@@ -3,6 +3,7 @@ export class Sprite {
     canvas = new CanvasRenderingContext2D(),
     position,
     imageSrc,
+    invertedImageSrc,
     scale = 1,
     framesMax = 1,
     animationSpeed = 1,
@@ -10,16 +11,18 @@ export class Sprite {
   }) {
     this.canvas = canvas;
     this.position = position;
+    this.imageSrc = imageSrc;
+    this.invertedImageSrc = invertedImageSrc;
     this.image = new Image();
-    if (imageSrc) {
-      this.image.src = imageSrc;
-    }
     this.scale = scale;
     this.framesMax = framesMax;
     this.framesCurrent = 0;
     this.framesElapsed = 0;
     this.framesHold = Math.round((60 / framesMax) * animationSpeed);
     this.offset = offset;
+    if (imageSrc) {
+      this.image.src = imageSrc;
+    }
   }
 
   draw() {
@@ -46,6 +49,10 @@ export class Sprite {
         this.framesCurrent = 0;
       }
     }
+  }
+
+  invert() {
+    this.image.src = this.invertedImageSrc || this.imageSrc;
   }
 
   /**

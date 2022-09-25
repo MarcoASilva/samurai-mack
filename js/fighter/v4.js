@@ -6,30 +6,44 @@ import {
   LEFT_BORDER_X,
   RIGHT_BORDER_X,
 } from "../globals/rules.js";
+import { CommandListener } from "../listener/CommandListener.js";
+import { Sprite } from "../renderable/sprite.js";
 
 /**
  * Classic first implementation of the Figher Class
  */
 export class Fighter {
+  /**
+   *
+   * @param {{playerName: string, commandListener: CommandListener, direction: "left" | "right", position: {x: number, y: number}, velocity: {x: number, y: number}, sprites: Sprite[], attackBox: { offset: { x: number, y: number }, width: number | undefine, height: number | undefine }}} params
+   */
   constructor({
+    playerName,
+    commandListener,
+    direction = "right",
     position,
     velocity,
     sprites,
     attackBox = { offset: { x: 0, y: 0 }, width: undefined, height: undefined },
-    commandListener,
-    playerName,
   }) {
+    this.playerName = playerName;
+    this.direction = direction;
     this.position = position;
     this.sprites = sprites;
 
-    Object.entries(this.sprites).forEach(
-      ([name, sprite]) => (sprite.position = this.position)
+    Object.entries(this.sprites).forEach(([name, variations]) =>
+      Object.entries(variations).forEach(
+        ([variation, sprite]) => (sprite.position = this.position)
+      )
     );
-    this.sprites.current = this.sprites.idle;
+    this.sprites.current = this.sprites.idle[direction];
 
     this.velocity = velocity;
+
+    // height and width are used by engine for collision detection
     this.height = 150;
     this.width = 50;
+
     this.attackBox = {
       position: {
         x: this.position.x,
@@ -40,7 +54,6 @@ export class Fighter {
       height: attackBox.height,
     };
 
-    this.playerName = playerName;
     this.health = STARTING_HEALTH_POINTS;
     this.isDying - false;
     this.isGettingHit = false;
@@ -125,8 +138,13 @@ export class Fighter {
   }
 
   updateAttackPosition() {
-    this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
-    this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+    if (this.direction === "right") {
+      this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
+      this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+    } else {
+      this.attackBox.position.x = this.position.x - this.attackBox.offset.x;
+      this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+    }
   }
 
   applyGravity() {
@@ -166,10 +184,12 @@ export class Fighter {
      **/
 
     // is dead
-    if (this.sprites.current.image === this.sprites.death.image) {
+    if (
+      this.sprites.current.image === this.sprites.death[this.direction].image
+    ) {
       if (
         this.sprites.current.framesCurrent ===
-        this.sprites.death.framesMax - 1
+        this.sprites.death[this.direction].framesMax - 1
       ) {
         this.isDying = false;
         this.dead = true;
@@ -178,10 +198,12 @@ export class Fighter {
     }
 
     // is attacking
-    if (this.sprites.current.image === this.sprites.attack1.image) {
+    if (
+      this.sprites.current.image === this.sprites.attack1[this.direction].image
+    ) {
       if (
         this.sprites.current.framesCurrent <
-        this.sprites.attack1.framesMax - 1
+        this.sprites.attack1[this.direction].framesMax - 1
       ) {
         return false;
       } else {
@@ -190,10 +212,12 @@ export class Fighter {
     }
 
     // is taking hit
-    if (this.sprites.current.image === this.sprites.takeHit.image) {
+    if (
+      this.sprites.current.image === this.sprites.takeHit[this.direction].image
+    ) {
       if (
         this.sprites.current.framesCurrent <
-        this.sprites.takeHit.framesMax - 1
+        this.sprites.takeHit[this.direction].framesMax - 1
       ) {
         return false;
       } else {
@@ -245,8 +269,8 @@ export class Fighter {
    * @param {"idle"|"run"|"jump"|"fall"|"attack1"|"takeHit"|"death"} sprite
    */
   switchSprite(sprite) {
-    if (this.sprites.current !== this.sprites[sprite]) {
-      this.sprites.current = this.sprites[sprite];
+    if (this.sprites.current !== this.sprites[sprite][this.direction]) {
+      this.sprites.current = this.sprites[sprite][this.direction];
       this.sprites.current.framesCurrent = 0;
     }
   }
