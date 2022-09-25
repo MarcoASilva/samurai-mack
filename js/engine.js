@@ -17,12 +17,41 @@ export class GameEngine {
     this.steps = [() => void 0];
   }
 
+  setPlayersDirections() {
+    if (this.context.player1.position.x > this.context.player2.position.x) {
+      this.context.player1.direction = "left";
+      this.context.player2.direction = "right";
+    } else {
+      this.context.player1.direction = "right";
+      this.context.player2.direction = "left";
+    }
+  }
+
+  /**
+   *
+   * @param {{rectangle1: Fighter, rectangle2: Fighter}} params
+   * @returns
+   */
   rectangularCollition({ rectangle1, rectangle2 }) {
+    if (rectangle1.direction === "right") {
+      return (
+        rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
+          rectangle2.position.x &&
+        rectangle1.attackBox.position.x <=
+          rectangle2.position.x + rectangle2.width &&
+        rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
+          rectangle2.position.y &&
+        rectangle1.attackBox.position.y <=
+          rectangle2.position.y + rectangle2.height
+      );
+    }
+
     return (
-      rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
-        rectangle2.position.x &&
-      rectangle1.attackBox.position.x <=
+      rectangle1.attackBox.position.x +
+        rectangle1.width -
+        rectangle1.attackBox.width <=
         rectangle2.position.x + rectangle2.width &&
+      rectangle1.position.x >= rectangle2.position.x &&
       rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
         rectangle2.position.y &&
       rectangle1.attackBox.position.y <=
@@ -38,7 +67,7 @@ export class GameEngine {
         rectangle2: this.context.player2,
       }) &&
       this.context.player1.isAttacking &&
-      this.context.player1.framesCurrent === 4
+      this.context.player1.sprites.current.framesCurrent === 4
     ) {
       this.context.player2.takeHit();
       this.context.player1.isAttacking = false;
@@ -54,7 +83,7 @@ export class GameEngine {
         rectangle2: this.context.player1,
       }) &&
       this.context.player2.isAttacking &&
-      this.context.player2.framesCurrent === 2
+      this.context.player2.sprites.current.framesCurrent === 2
     ) {
       this.context.player1.takeHit();
       this.context.player2.isAttacking = false;
@@ -94,7 +123,12 @@ export class GameEngine {
   }
 
   start() {
-    this.steps = [this.render, this.checkAttacks, this.checkPlayersHealth];
+    this.steps = [
+      this.render,
+      this.setPlayersDirections,
+      this.checkAttacks,
+      this.checkPlayersHealth,
+    ];
     this.context.player1.start();
     this.context.player2.start();
     this.context.timer.run().then(this.endGame.bind(this));

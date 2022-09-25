@@ -127,124 +127,278 @@ export const setup = ({ config }) => {
 
   const player1 = new Fighter({
     playerName: "Player 1",
-    canvas: canvas,
+    commandListener: player1CommandListener,
+    direction: "right",
     position: {
       x: 0,
       y: 0,
     },
     velocity: { x: 0, y: 0 },
-    imageSrc: "./img/samuraiMack/idle.png",
-    scale: 2.5,
-    framesMax: 8,
-    offset: { x: 215, y: 157 },
-    sprites: {
-      idle: {
-        imageSrc: "./img/samuraiMack/idle.png",
-        scale: 2.5,
-        framesMax: 8,
-      },
-      run: {
-        imageSrc: "./img/samuraiMack/Run.png",
-        scale: 2.5,
-        framesMax: 8,
-      },
-      jump: {
-        imageSrc: "./img/samuraiMack/Jump.png",
-        scale: 2.5,
-        framesMax: 2,
-      },
-      fall: {
-        imageSrc: "./img/samuraiMack/Fall.png",
-        scale: 2.5,
-        framesMax: 2,
-      },
-      attack1: {
-        imageSrc: "./img/samuraiMack/Attack1.png",
-        scale: 2.5,
-        framesMax: 6,
-      },
-      takeHit: {
-        imageSrc: "./img/samuraiMack/TakeHitWhiteSilhouette.png",
-        scale: 2.5,
-        framesMax: 4,
-      },
-      death: {
-        imageSrc: "./img/samuraiMack/death.png",
-        scale: 2.5,
-        framesMax: 6,
-      },
-    },
     attackBox: {
       offset: {
         x: 100,
         y: 50,
       },
-      width: 160,
+      width: 150,
       height: 50,
     },
-    commandListener: player1CommandListener,
+    sprites: {
+      idle: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedIdle.png",
+          scale: 2.5,
+          framesMax: 8,
+          animationSpeed: 0.5,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/idle.png",
+          scale: 2.5,
+          framesMax: 8,
+          animationSpeed: 0.5,
+        }),
+      },
+      run: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedRun.png",
+          scale: 2.5,
+          framesMax: 8,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/Run.png",
+          scale: 2.5,
+          framesMax: 8,
+        }),
+      },
+      jump: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedJump.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/Jump.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+      },
+      fall: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedFall.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/Fall.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+      },
+      attack1: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedAttack1.png",
+          scale: 2.5,
+          framesMax: 6,
+          animationSpeed: 0.3,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/Attack1.png",
+          scale: 2.5,
+          framesMax: 6,
+          animationSpeed: 0.3,
+        }),
+      },
+      takeHit: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedTakeHitWhiteSilhouette.png",
+          scale: 2.5,
+          framesMax: 4,
+          animationSpeed: 0.2,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/TakeHitWhiteSilhouette.png",
+          scale: 2.5,
+          framesMax: 4,
+          animationSpeed: 0.2,
+        }),
+      },
+      death: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/InvertedDeath.png",
+          scale: 2.5,
+          framesMax: 6,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 157 },
+          imageSrc: "./img/samuraiMack/Death.png",
+          scale: 2.5,
+          framesMax: 6,
+        }),
+      },
+    },
   });
 
   const player2 = new Fighter({
     playerName: "ROGERIO123",
-    canvas: canvas,
+    commandListener: player2CommandListener,
+    direction: "left",
     position: {
       x: 400,
       y: 100,
     },
     velocity: { x: 0, y: 0 },
-    color: "blue",
-    offset: { x: -50, y: 0 },
-    imageSrc: "./img/kenji/idle.png",
-    scale: 2.5,
-    framesMax: 4,
-    offset: { x: 215, y: 167 },
-    sprites: {
-      idle: {
-        imageSrc: "./img/kenji/idle.png",
-        scale: 2.5,
-        framesMax: 4,
-      },
-      run: {
-        imageSrc: "./img/kenji/Run.png",
-        scale: 2.5,
-        framesMax: 8,
-      },
-      jump: {
-        imageSrc: "./img/kenji/Jump.png",
-        scale: 2.5,
-        framesMax: 2,
-      },
-      fall: {
-        imageSrc: "./img/kenji/Fall.png",
-        scale: 2.5,
-        framesMax: 2,
-      },
-      attack1: {
-        imageSrc: "./img/kenji/Attack1.png",
-        scale: 2.5,
-        framesMax: 4,
-      },
-      takeHit: {
-        imageSrc: "./img/kenji/TakeHit.png",
-        scale: 2.5,
-        framesMax: 3,
-      },
-      death: {
-        imageSrc: "./img/kenji/death.png",
-        scale: 2.5,
-        framesMax: 7,
-      },
-    },
     attackBox: {
       offset: {
-        x: -170,
+        x: 100,
         y: 50,
       },
       width: 150,
       height: 50,
     },
-    commandListener: player2CommandListener,
+    sprites: {
+      idle: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Idle.png",
+          scale: 2.5,
+          framesMax: 4,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedIdle.png",
+          scale: 2.5,
+          framesMax: 4,
+        }),
+      },
+      run: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Run.png",
+          scale: 2.5,
+          framesMax: 8,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedRun.png",
+          scale: 2.5,
+          framesMax: 8,
+        }),
+      },
+      jump: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Jump.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedJump.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+      },
+      fall: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Fall.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedFall.png",
+          scale: 2.5,
+          framesMax: 2,
+        }),
+      },
+      attack1: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Attack1.png",
+          scale: 2.5,
+          framesMax: 4,
+          animationSpeed: 0.4,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedAttack1.png",
+          scale: 2.5,
+          framesMax: 4,
+          animationSpeed: 0.4,
+        }),
+      },
+      takeHit: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/TakeHit.png",
+          scale: 2.5,
+          framesMax: 3,
+          animationSpeed: 0.3,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedTakeHit.png",
+          scale: 2.5,
+          framesMax: 3,
+          animationSpeed: 0.3,
+        }),
+      },
+      death: {
+        left: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/Death.png",
+          scale: 2.5,
+          framesMax: 7,
+        }),
+        right: new Sprite({
+          canvas,
+          offset: { x: 215, y: 167 },
+          imageSrc: "./img/kenji/InvertedDeath.png",
+          scale: 2.5,
+          framesMax: 7,
+        }),
+      },
+    },
   });
 
   const player1Controller = new Controller({
