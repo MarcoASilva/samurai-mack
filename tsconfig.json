@@ -1,0 +1,15 @@
+{
+  "include": ["src", "config"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES6",
+    "outDir": "public/dist",
+    "rootDir": ".",
+    "paths": { "@/*": ["src/*"], "@core": ["src/core/index.ts"] },
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "moduleResolution": "Node",
+    "lib": ["es2018", "dom", "dom.iterable"]
+  }
+}

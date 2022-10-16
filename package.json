@@ -1,0 +1,35 @@
+{
+  "name": "samurai-mack",
+  "version": "0.1.0",
+  "description": "Javascript samurai fighting game",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "http-server ./public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoASilva/samurai-mack.git"
+  },
+  "keywords": [],
+  "author": "marco.up.bsi@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcoASilva/samurai-mack/issues"
+  },
+  "homepage": "https://github.com/MarcoASilva/samurai-mack#readme",
+  "devDependencies": {
+    "@peker/eslint-config": "^2.3.1",
+    "http-server": "^14.1.1",
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "@peker/prettier-config": "^1.1.0",
+    "gsap": "^3.11.3",
+    "toastify-js": "^1.12.0"
+  },
+  "prettier": "@peker/prettier-config",
+  "eslintConfig": {
+    "extends": "@peker"
+  }
+}
