@@ -1,11 +1,12 @@
+import { gsap } from 'gsap';
 import {
   Engine,
   EngineEvent,
   EngineEventHandler,
   EngineState,
-} from '@/types/engine.interface';
-import { Fighter } from '@/types/fighter.interface';
-import { GameContext } from '@/types/game-context.interface';
+} from '../types/engine.interface';
+import { Fighter } from '../types/fighter.interface';
+import { GameContext } from '../types/game-context.interface';
 
 export interface EngineParams {
   context: GameContext;
@@ -21,6 +22,12 @@ enum EngineStates {
   Stopped = 'Stopped',
 }
 
+enum EngineEvents {
+  pause = 'pause',
+  end = 'end',
+  resume = 'resume',
+}
+
 const ignore: EngineEventHandler<any> = () => void 0;
 
 /**
@@ -31,8 +38,9 @@ const ignore: EngineEventHandler<any> = () => void 0;
  * Strategy: Frame-by-Frame
  */
 export class GameEngine implements Engine {
-  static readonly states: Record<EngineState, EngineState> = EngineStates;
-  state: EngineState = EngineStates.New;
+  static readonly STATE: Record<EngineState, EngineState> = EngineStates;
+  static readonly EVENT: Record<EngineEvent, EngineEvent> = EngineEvents;
+  state: EngineState = GameEngine.STATE.New;
 
   private steps = [() => void 0];
   private eventListeners: EngineEventListeners = {
@@ -163,8 +171,11 @@ export class GameEngine implements Engine {
     ) {
       return;
     }
-    this.emit('end');
+
+    // order here matters as emit('end') can trigger stop indirectly hence updating this.steps = ['render'] before this.steps.splice(this.steps.indexOf(this.endAfterAnimationIsComplete), 1);
+    // hence producing this.steps = [] (empty array)
     this.steps.splice(this.steps.indexOf(this.endAfterAnimationIsComplete), 1);
+    this.emit('end');
   }
 
   endGame() {
@@ -175,7 +186,7 @@ export class GameEngine implements Engine {
   }
 
   start() {
-    this.state = EngineStates.Started;
+    this.state = GameEngine.STATE.Started;
     this.steps = [
       this.render,
       this.setPlayersDirections,
@@ -192,7 +203,7 @@ export class GameEngine implements Engine {
       continueRendering: true,
     },
   ) {
-    this.state = EngineStates.Stopped;
+    this.state = GameEngine.STATE.Stopped;
     this.context.timer.stop();
     this.context.player1.stop();
     this.context.player2.stop();

@@ -1,0 +1,301 @@
+{
+  "rules": {
+    "CANVAS_HEIGHT": 576,
+    "CANVAS_WIDTH": 1024,
+    "GRAVITY": 0.7,
+    "FLOOR_Y": 479,
+    "LEFT_BORDER_X": 0,
+    "RIGHT_BORDER_X": 1024,
+    "CEILING_Y": 0,
+    "ROUND_TIME": 30,
+    "STARTING_HEALTH_POINTS": 100
+  },
+  "game": {
+    "gravity": 0.7,
+    "roundTime": 10
+  },
+  "stage": {
+    "floorY": 479,
+    "leftBorderX": 0,
+    "rightBorderX": 1024,
+    "ceilingY": 0
+  },
+  "character": {
+    "kenji": {
+      "maxHealth": 100,
+      "jumpVelocity": -13,
+      "runVelocity": 7,
+      "width": 50,
+      "height": 150,
+      "velocity": { "x": 0, "y": 0 },
+      "attackBox": {
+        "offset": {
+          "x": 100,
+          "y": 50
+        },
+        "width": 150,
+        "height": 50
+      },
+      "sprites": {
+        "idle": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Idle.png",
+            "scale": 2.5,
+            "framesMax": 4
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedIdle.png",
+            "scale": 2.5,
+            "framesMax": 4
+          }
+        },
+        "run": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Run.png",
+            "scale": 2.5,
+            "framesMax": 8
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedRun.png",
+            "scale": 2.5,
+            "framesMax": 8
+          }
+        },
+        "jump": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Jump.png",
+            "scale": 2.5,
+            "framesMax": 2
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedJump.png",
+            "scale": 2.5,
+            "framesMax": 2
+          }
+        },
+        "fall": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Fall.png",
+            "scale": 2.5,
+            "framesMax": 2
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedFall.png",
+            "scale": 2.5,
+            "framesMax": 2
+          }
+        },
+        "attack1": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Attack1.png",
+            "scale": 2.5,
+            "framesMax": 4,
+            "animationSpeed": 2.5
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedAttack1.png",
+            "scale": 2.5,
+            "framesMax": 4,
+            "animationSpeed": 2.5
+          }
+        },
+        "takeHit": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/TakeHit.png",
+            "scale": 2.5,
+            "framesMax": 3,
+            "animationSpeed": 3
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedTakeHit.png",
+            "scale": 2.5,
+            "framesMax": 3,
+            "animationSpeed": 3
+          }
+        },
+        "death": {
+          "left": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/Death.png",
+            "scale": 2.5,
+            "framesMax": 7
+          },
+          "right": {
+            "offset": { "x": 215, "y": 167 },
+            "imageSrc": "./img/kenji/InvertedDeath.png",
+            "scale": 2.5,
+            "framesMax": 7
+          }
+        }
+      }
+    },
+    "mack": {
+      "maxHealth": 100,
+      "jumpVelocity": -17,
+      "runVelocity": 5,
+      "width": 50,
+      "height": 150,
+      "velocity": { "x": 0, "y": 0 },
+      "attackBox": {
+        "offset": {
+          "x": 100,
+          "y": 50
+        },
+        "width": 150,
+        "height": 50
+      },
+      "sprites": {
+        "idle": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedIdle.png",
+            "scale": 2.5,
+            "framesMax": 8,
+            "animationSpeed": 2
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/idle.png",
+            "scale": 2.5,
+            "framesMax": 8,
+            "animationSpeed": 2
+          }
+        },
+        "run": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedRun.png",
+            "scale": 2.5,
+            "framesMax": 8
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/Run.png",
+            "scale": 2.5,
+            "framesMax": 8
+          }
+        },
+        "jump": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedJump.png",
+            "scale": 2.5,
+            "framesMax": 2
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/Jump.png",
+            "scale": 2.5,
+            "framesMax": 2
+          }
+        },
+        "fall": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedFall.png",
+            "scale": 2.5,
+            "framesMax": 2
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/Fall.png",
+            "scale": 2.5,
+            "framesMax": 2
+          }
+        },
+        "attack1": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedAttack1.png",
+            "scale": 2.5,
+            "framesMax": 6,
+            "animationSpeed": 3
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/Attack1.png",
+            "scale": 2.5,
+            "framesMax": 6,
+            "animationSpeed": 3
+          }
+        },
+        "takeHit": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedTakeHitWhiteSilhouette.png",
+            "scale": 2.5,
+            "framesMax": 4,
+            "animationSpeed": 5
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/TakeHitWhiteSilhouette.png",
+            "scale": 2.5,
+            "framesMax": 4,
+            "animationSpeed": 5
+          }
+        },
+        "death": {
+          "left": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/InvertedDeath.png",
+            "scale": 2.5,
+            "framesMax": 6
+          },
+          "right": {
+            "offset": { "x": 215, "y": 157 },
+            "imageSrc": "./img/samuraiMack/Death.png",
+            "scale": 2.5,
+            "framesMax": 6
+          }
+        }
+      }
+    }
+  },
+  "canvas": {
+    "width": 1024,
+    "height": 576
+  },
+  "controls": {
+    "gamepads": {
+      "default": {
+        "left": 14,
+        "right": 15,
+        "jump": 0,
+        "attack": 2
+      },
+      "Wireless controller (STANDARD GAMEPAD Vendor: 054c Product: 05c4)": {
+        "left": 14,
+        "right": 15,
+        "jump": 0,
+        "attack": 2
+      }
+    },
+    "keyboard": {
+      "player1": {
+        "left": "a",
+        "right": "d",
+        "jump": "w",
+        "attack": " "
+      },
+      "player2": {
+        "left": "ArrowLeft",
+        "right": "ArrowRight",
+        "jump": "ArrowUp",
+        "attack": "ArrowDown"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { GameEvent, Plugin, setup } from './Game';
-import config from '../config';
+import config from '../conf/config.json';
 import { Sprite } from './renderables/Sprite';
 
 const contextLoggerPlugin: Plugin = context => {
@@ -24,30 +24,32 @@ const lightningRunPlugin: Plugin = context => {
 };
 
 const superSpeedPlugin: Plugin = context => {
-  const playersProgres = {
-    537321: { rank: 'Graduated', level: 4 },
-    94127: { rank: 'Rookie', level: 1 },
-    9120: { rank: 'Samurai', level: 7 },
-  };
-  context.players.forEach(player => {
-    player.fighter.runVelocity = playersProgres[player.user.id].level * 2;
-  });
+  context.players[0].fighter.runVelocity = 10;
+  (context as any).fuck = true;
   return context;
 };
 
 const game = setup(config);
 
-game.register(contextLoggerPlugin);
+// game.register(contextLoggerPlugin);
 
 game.on('load', ({ context }) => {
-  lightningRunPlugin(context);
-  superSpeedPlugin(context);
+  // lightningRunPlugin(context);
+  // superSpeedPlugin(context);
+  console.log('superSpeedPlugin loaded');
 });
 
-const gameEvents: GameEvent[] = ['start', 'pause', 'resume', 'end'];
+const gameEvents: GameEvent[] = [
+  /*'load', will overwrite game.on('load', ...) above*/ 'start',
+  'pause',
+  'resume',
+  'end',
+];
 
 gameEvents.forEach(event =>
   game.on(event, params => console.log(event, params)),
 );
+
+game.on('end', params => game.stop());
 
 game.start();

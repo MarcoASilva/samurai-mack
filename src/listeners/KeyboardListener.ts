@@ -1,5 +1,5 @@
-import { Command } from '@/types/general-interfaces';
-import { InputListenerCallbacks } from '@/types/input-listener.interface';
+import { Command } from '../types/general-interfaces';
+import { InputListenerCallbacks } from '../types/input-listener.interface';
 import { BaseListener } from './BaseListener';
 
 type KeyboardCommands = {

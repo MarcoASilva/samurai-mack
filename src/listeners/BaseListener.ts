@@ -1,5 +1,5 @@
-import { Command } from '@/types/general-interfaces';
-import { InputListener, ListenerMap } from '@/types/input-listener.interface';
+import { Command } from '../types/general-interfaces';
+import { InputListener, ListenerMap } from '../types/input-listener.interface';
 
 export abstract class BaseListener implements InputListener {
   listeners: ListenerMap;

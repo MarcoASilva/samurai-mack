@@ -1,3 +1,4 @@
+import { Config } from './config.type';
 import { XYCoordinates } from './general-interfaces';
 import { InputListener } from './input-listener.interface';
 import { Sprite } from './sprite.interface';
@@ -23,24 +24,39 @@ export type FighterSprites = {
   [key in FighterAnimationType]: Record<FighterDirection, Sprite>;
 };
 
-export interface FighterParams {
-  playerName: string;
-  commandListener?: InputListener;
-  direction: FighterDirection;
-  position: XYCoordinates;
-  velocity: XYCoordinates;
-  attackBox: Partial<FighterAttackBox>;
-  sprites: FighterSprites;
-  /** Current {@link Sprite} being rendered/animated on the screen. */
-  currentSprite?: Sprite;
-  width: number;
-  health: number;
-  height: number;
+export type Character = keyof Omit<Config['character'], 'all'>;
+
+export enum CharacterType {
+  Kenji = 'kenji',
+  Mack = 'mack',
 }
 
-export interface Fighter extends Required<FighterParams> {
-  readonly characterName: string;
+export interface FighterParams {
+  config: Config;
+  canvas: CanvasRenderingContext2D;
+  character: Character;
+  playerName: string;
+  direction: FighterDirection;
+  position: XYCoordinates;
+  health?: number;
+  width?: number;
+  height?: number;
+  velocity?: XYCoordinates;
+  attackBox?: Partial<FighterAttackBox>;
+  sprites?: FighterSprites;
+  /** Current {@link Sprite} being rendered/animated on the screen. */
+  currentSprite?: Sprite;
+  commandListener?: InputListener;
+}
 
+export interface CharacterAttributes {
+  jumpVelocity: number;
+  runVelocity: number;
+  maxHealth: number;
+}
+
+export interface Fighter
+  extends Required<Omit<FighterParams, 'config' | 'canvas'>> {
   /** state flags */
   isGettingHit: boolean;
   isAttacking: boolean;
@@ -48,8 +64,11 @@ export interface Fighter extends Required<FighterParams> {
   isDead: boolean;
 
   /** character attributes */
-  jumpVelocity: number;
-  runVelocity: number;
+  attributes: CharacterAttributes;
+
+  /** reference values needed for calculations */
+  game: Pick<Config['game'], 'gravity'>;
+  stage: Config['stage'];
 
   startRunningLeft(): void;
   stopRunningLeft(): void;

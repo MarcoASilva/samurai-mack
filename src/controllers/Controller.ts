@@ -1,13 +1,13 @@
 import {
   Controller as ControllerInterface,
   ControllerParams,
-} from '@/types/controller.interface';
-import { Fighter } from '@/types/fighter.interface';
-import { Command } from '@/types/general-interfaces';
+} from '../types/controller.interface';
+import { Fighter } from '../types/fighter.interface';
+import { Command } from '../types/general-interfaces';
 import {
   InputListener,
   InputListenerCallbacks,
-} from '@/types/input-listener.interface';
+} from '../types/input-listener.interface';
 
 interface ControllerKeys {
   jump: {

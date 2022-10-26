@@ -1,24 +1,26 @@
 import { Config } from './types/config.type';
 import { Fighter } from './types/fighter.interface';
 import { GameContext } from './types/game-context.interface';
-import { GameEngine, setup as _setup } from '@core';
+import { GameEngine, setup as _setup } from './core/Index';
+import { EngineEventHandler } from './types/engine.interface';
 
 export type GameEvent = 'load' | 'start' | 'pause' | 'resume' | 'end';
 
 export type GameEventHandler<T> = (
   params: T extends 'end'
-    ? { context: GameContext; winner: Fighter }
-    : T extends 'start' | 'pause'
+    ? { context: GameContext; winner: Fighter | null }
+    : T extends 'load' | 'start' | 'pause' | 'resume'
     ? { context: GameContext }
     : never,
 ) => void;
 
-export type GameEventListeners = Record<GameEvent, GameEventHandler<GameEvent>>;
+export type GameEventListeners = {
+  [key in GameEvent]: GameEventHandler<key>;
+};
 
 export const ignore: GameEventHandler<GameEvent> = () => void 0;
 
 export type Plugin = (context: GameContext) => GameContext;
-
 class Game {
   private config: Config;
   private listeners: GameEventListeners = {
@@ -42,8 +44,6 @@ class Game {
     this.engine.on('end', this.onEnd.bind(this));
     this.engine.on('pause', this.onPause.bind(this));
     this.engine.on('resume', this.onResume.bind(this));
-
-    this.listeners.load({ context: this.engine.context });
   }
 
   private onPause(): void {
@@ -56,13 +56,15 @@ class Game {
     this.listeners.resume({ context: this.engine.context });
   }
 
-  private onEnd({ winner }: { winner: Fighter }): void {
-    console.info(`[i] Game ended: [Winner: ${winner.playerName}]`);
-    this.engine.stop();
-    window.cancelAnimationFrame(this.animationFrameRequest);
-  }
+  private onEnd: EngineEventHandler<'end'> = (params): void => {
+    console.info(
+      `[i] Game ended: [Winner: ${params.winner?.playerName ?? 'TIE'}]`,
+    );
+    this.listeners.end({ context: this.engine.context, winner: params.winner });
+  };
 
   private loop(): void {
+    console.debug('loop still running');
     this.plugins.forEach(
       plugin => (this.engine.context = plugin(this.engine.context)),
     );
@@ -80,7 +82,8 @@ class Game {
   }
 
   start(): void {
-    if (this.engine.state !== GameEngine.states.New) {
+    this.listeners.load({ context: this.engine.context });
+    if (this.engine.state !== GameEngine.STATE.New) {
       throw new Error('Cannot start a Game that is already in progress');
     }
     this.engine.start();
@@ -95,17 +98,21 @@ class Game {
       continueRendering: false,
     },
   ): void {
-    if (this.engine.state === GameEngine.states.Stopped) {
-      return console.warn('Game is already stopped.');
-    }
-    if (this.engine.state === GameEngine.states.New) {
+    // if this has to be called again to stop rendering than does not make sense to throw a warning
+    // if (this.engine.state === GameEngine.STATE.Stopped) {
+    //   return console.warn('Game is already stopped.');
+    // }
+    if (this.engine.state === GameEngine.STATE.New) {
       return console.warn('Game has not started yet.');
     }
     this.engine.stop({ continueRendering });
+    if (!continueRendering) {
+      window.cancelAnimationFrame(this.animationFrameRequest);
+    }
   }
 
   reset(config?: Config): void {
-    if (this.engine.state !== GameEngine.states.Stopped) {
+    if (this.engine.state !== GameEngine.STATE.Stopped) {
       throw new Error('Game must be stopped in order to reset.');
     }
     this.engine.context = _setup(config ?? this.config);

@@ -1,4 +1,4 @@
-import { Timer as TimerInterface } from '@/types/timer.interface';
+import { Timer as TimerInterface } from '../types/timer.interface';
 
 export interface TimerParams {
   roundTime: number;
@@ -7,6 +7,7 @@ export interface TimerParams {
 
 export class Timer implements TimerInterface {
   roundTime: number;
+  currentTime: number;
   timerElement: HTMLDivElement;
   private intervalId: number;
 
@@ -14,15 +15,16 @@ export class Timer implements TimerInterface {
     if (!timerElement) throw 'No timerElement passed in Timer constructor';
 
     this.roundTime = roundTime;
+    this.currentTime = roundTime;
     this.timerElement = timerElement;
   }
 
   async run(): Promise<void> {
     return new Promise<void>(resolve => {
       this.intervalId = setInterval(() => {
-        this.roundTime--;
-        this.timerElement.innerHTML = String(this.roundTime);
-        if (this.roundTime === 0) {
+        this.currentTime--;
+        this.timerElement.innerHTML = String(this.currentTime);
+        if (this.currentTime === 0) {
           clearInterval(this.intervalId);
           resolve();
         }

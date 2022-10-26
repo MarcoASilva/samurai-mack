@@ -1,3 +1,3 @@
-import config from '../../config/index.js';
+import config from '../../conf/config.json';
 
 export type Config = typeof config;

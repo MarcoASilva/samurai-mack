@@ -1,4 +1,4 @@
-import { Sprite } from '@/types/sprite.interface';
+import { Sprite } from '../types/sprite.interface';
 
 export interface RendererParams {
   sprites: Sprite[];

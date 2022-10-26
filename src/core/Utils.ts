@@ -1,4 +1,4 @@
-import { Fighter } from '@/types/fighter.interface';
+import { Fighter } from '../types/fighter.interface';
 import Toastify from 'toastify-js';
 
 export class Utils {

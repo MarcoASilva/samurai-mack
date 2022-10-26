@@ -1,5 +1,5 @@
-import { Sprite as SpriteInterface } from '@/types/sprite.interface';
-import { XYCoordinates } from '@/types/general-interfaces';
+import { Sprite as SpriteInterface } from '../types/sprite.interface';
+import { XYCoordinates } from '../types/general-interfaces';
 
 export interface SpriteParams {
   canvas: CanvasRenderingContext2D;

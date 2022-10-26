@@ -1,51 +1,39 @@
 import {
-  Fighter,
+  Character,
+  CharacterAttributes,
+  Fighter as FighterInterface,
+  FighterAnimationType,
   FighterAttackBox,
   FighterDirection,
   FighterParams,
   FighterSprites,
-} from '@/types/fighter.interface.js';
-import { XYCoordinates } from '@/types/general-interfaces.js';
-import { InputListener } from '@/types/input-listener.interface.js';
-import { Sprite } from '@/types/sprite.interface.js';
-import {
-  GRAVITY,
-  FLOOR_Y,
-  STARTING_HEALTH_POINTS,
-  CEILING_Y,
-  LEFT_BORDER_X,
-  RIGHT_BORDER_X,
-} from '../../js/globals/rules.js';
+} from '../types/fighter.interface';
+import { XYCoordinates } from '../types/general-interfaces';
+import { InputListener } from '../types/input-listener.interface';
+import { Sprite as SpriteInterface } from '../types/sprite.interface';
+import { Sprite } from '../renderables/Sprite';
+import { Config } from '../types/config.type';
 
-const DEFAULTS = {
-  attackbox: {
-    position: {
-      x: 0,
-      y: 0,
-    },
-    offset: {
-      x: 0,
-      y: 0,
-    },
-    width: 150,
-    height: 50,
-  },
-  width: 50,
-  height: 150,
-  health: 100,
-};
-
-export class Mack implements Fighter {
-  readonly characterName: 'Samurai Mack';
-
+export class Fighter implements FighterInterface {
+  character: Character;
   playerName: string;
   position: XYCoordinates;
   direction: FighterDirection;
   velocity: XYCoordinates;
   attackBox: FighterAttackBox;
   commandListener: InputListener;
-  sprites: FighterSprites;
-  currentSprite: Sprite;
+  sprites: FighterSprites = {
+    attack1: { left: null, right: null },
+    death: { left: null, right: null },
+    fall: { left: null, right: null },
+    idle: { left: null, right: null },
+    jump: { left: null, right: null },
+    run: { left: null, right: null },
+    takeHit: { left: null, right: null },
+  };
+  currentSprite: SpriteInterface;
+
+  health: number;
 
   // height and width are used by engine for collision detection
   /** Fighter's height. Internally fighter is represented by a rectangle. */
@@ -53,12 +41,11 @@ export class Mack implements Fighter {
   /** Fighter's height. Internally fighter is represented by a rectangle. */
   width: number;
 
-  /** Fighter's current HP */
-  health: number;
-
   // CHARACTER ATTRIBUTES!
-  jumpVelocity: number = -13;
-  runVelocity: number = 5;
+  attributes: CharacterAttributes;
+
+  game: Pick<Config['game'], 'gravity'>;
+  stage: Config['stage'];
 
   // state flags
   isGettingHit = false;
@@ -72,6 +59,9 @@ export class Mack implements Fighter {
   };
 
   constructor({
+    config,
+    canvas,
+    character,
     playerName,
     commandListener,
     direction = 'right',
@@ -84,47 +74,98 @@ export class Mack implements Fighter {
     width,
     health,
   }: FighterParams) {
+    this.character = character;
     this.playerName = playerName;
     this.direction = direction;
     this.position = position;
-    this.sprites = sprites;
+    this.health = health ?? config.character[this.character].maxHealth ?? 100;
 
-    // bind sprites positions to fighters position
+    // height and width are used by engine for collision detection
+    this.height = height ?? config.character[this.character].height ?? 150;
+    this.width = width ?? config.character[this.character].width ?? 50;
+
+    this.attackBox = {
+      position: attackBox?.position ?? {
+        x: this.position.x,
+        y: this.position.y,
+      },
+      offset: attackBox?.offset ??
+        config.character[this.character].attackBox.offset ?? {
+          x: 0,
+          y: 0,
+        },
+      width:
+        attackBox?.width ??
+        config.character[this.character].attackBox.width ??
+        150,
+      height:
+        attackBox?.height ??
+        config.character[this.character].attackBox.height ??
+        50,
+    };
+
+    this.velocity = velocity ??
+      config.character[this.character].velocity ?? { x: 0, y: 0 };
+
+    this.game = { gravity: config.game.gravity };
+    this.stage = { ...config.stage };
+
+    this.loadAttributes(config);
+
+    if (sprites) {
+      this.sprites = sprites;
+      this.bindSpritesPosition();
+    } else {
+      this.loadSprites({ config, canvas });
+    }
+
+    this.currentSprite = currentSprite ?? this.sprites.idle[direction];
+
+    this.commandListener = commandListener;
+    this.listenCommands(this.commandListener);
+  }
+
+  loadAttributes(config: Config) {
+    this.attributes = {
+      jumpVelocity: config.character[this.character].jumpVelocity ?? -10,
+      runVelocity: config.character[this.character].runVelocity ?? 5,
+      maxHealth: config.character[this.character].maxHealth ?? 100,
+    };
+  }
+
+  loadSprites({
+    config,
+    canvas,
+  }: {
+    config: Config;
+    canvas: CanvasRenderingContext2D;
+  }) {
+    Object.entries(this.sprites).forEach(
+      ([name, variations]: [
+        FighterAnimationType,
+        Record<FighterDirection, Sprite>,
+      ]) =>
+        Object.entries(variations).forEach(
+          ([variation]: [FighterDirection, Sprite]) => {
+            this.sprites[name][variation] = new Sprite({
+              ...config.character[this.character].sprites[name][variation],
+              position: this.position,
+              canvas: canvas,
+            });
+          },
+        ),
+    );
+  }
+
+  bindSpritesPosition() {
     Object.entries(this.sprites).forEach(([name, variations]) =>
       Object.entries(variations).forEach(
         ([variation, sprite]) => (sprite.position = this.position),
       ),
     );
-    this.currentSprite = currentSprite ?? this.sprites.idle[direction];
-
-    this.velocity = velocity;
-
-    // height and width are used by engine for collision detection
-    this.height = height || 150;
-    this.width = width || 50;
-
-    this.health = health || STARTING_HEALTH_POINTS;
-
-    this.attackBox = {
-      position: attackBox.position ?? {
-        x: this.position.x,
-        y: this.position.y,
-      },
-      offset: attackBox.offset ?? {
-        x: 0,
-        y: 0,
-      },
-      width: attackBox.width ?? 150,
-      height: attackBox.height ?? 50,
-    };
-
-    if (commandListener) {
-      this.commandListener = commandListener;
-      this.listenCommands(this.commandListener);
-    }
   }
 
-  listenCommands(commandListener: InputListener) {
+  listenCommands(commandListener) {
     commandListener.on(
       'left',
       this.startRunningLeft.bind(this),
@@ -140,7 +181,7 @@ export class Mack implements Fighter {
   }
 
   startRunningLeft() {
-    this.controls.left = this.runVelocity;
+    this.controls.left = this.attributes.runVelocity;
   }
 
   stopRunningLeft() {
@@ -148,7 +189,7 @@ export class Mack implements Fighter {
   }
 
   startRunningRight() {
-    this.controls.right = this.runVelocity;
+    this.controls.right = this.attributes.runVelocity;
   }
 
   stopRunningRight() {
@@ -156,7 +197,7 @@ export class Mack implements Fighter {
   }
 
   jump() {
-    this.velocity.y = this.jumpVelocity;
+    this.velocity.y = this.attributes.jumpVelocity;
   }
 
   attack() {
@@ -164,29 +205,32 @@ export class Mack implements Fighter {
   }
 
   start() {
-    this.commandListener?.start();
+    this.commandListener.start();
   }
 
   stop() {
-    this.commandListener?.stop();
+    this.commandListener.stop();
     this.controls.left = 0;
     this.controls.right = 0;
   }
 
   updatePlayerPosition() {
     this.position.y += this.velocity.y;
-    this.position.y = this.position.y < CEILING_Y ? CEILING_Y : this.position.y;
+    this.position.y =
+      this.position.y < this.stage.ceilingY
+        ? this.stage.ceilingY
+        : this.position.y;
 
     this.velocity.x = this.controls.right - this.controls.left;
     this.position.x += this.velocity.x;
     this.position.x =
-      this.position.x < LEFT_BORDER_X
-        ? LEFT_BORDER_X
+      this.position.x < this.stage.leftBorderX
+        ? this.stage.leftBorderX
         : this.position.x -
             this.currentSprite.offset.x * 0.6 +
             this.currentSprite.image.width / this.currentSprite.framesMax >
-          RIGHT_BORDER_X
-        ? RIGHT_BORDER_X +
+          this.stage.rightBorderX
+        ? this.stage.rightBorderX +
           this.currentSprite.offset.x * 0.6 -
           this.currentSprite.image.width / this.currentSprite.framesMax
         : this.position.x;
@@ -203,11 +247,11 @@ export class Mack implements Fighter {
   }
 
   applyGravity() {
-    if (this.position.y + 150 + this.velocity.y >= FLOOR_Y) {
+    if (this.position.y + this.height + this.velocity.y >= this.stage.floorY) {
       this.velocity.y = 0;
       this.position.y = 330;
     } else {
-      this.velocity.y += GRAVITY;
+      this.velocity.y += this.game.gravity;
     }
   }
 

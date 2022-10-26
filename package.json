@@ -2,25 +2,34 @@
   "name": "samurai-mack",
   "version": "0.1.0",
   "description": "Javascript samurai fighting game",
-  "main": "dist/index.js",
+  "source": "src/Index.ts",
+  "targets": {
+    "modern": {
+      "engines": {
+        "browsers": "Chrome 80"
+      }
+    },
+    "legacy": {
+      "engines": {
+        "browsers": "> 0.5%, last 2 versions, not dead"
+      }
+    }
+  },
   "scripts": {
-    "start": "http-server ./public",
+    "build": "rm -rf dist && cp -r public dist && parcel build --no-cache",
+    "serve": "live-server dist",
+    "start": "npm run build && npm run serve",
+    "watch": "chokidar 'src/**/**.ts' --initial -d 1000 -c 'npm run build'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MarcoASilva/samurai-mack.git"
-  },
-  "keywords": [],
-  "author": "marco.up.bsi@gmail.com",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MarcoASilva/samurai-mack/issues"
-  },
-  "homepage": "https://github.com/MarcoASilva/samurai-mack#readme",
   "devDependencies": {
+    "@parcel/packager-ts": "^2.7.0",
+    "@parcel/transformer-typescript-types": "^2.7.0",
     "@peker/eslint-config": "^2.3.1",
+    "chokidar-cli": "^3.0.0",
     "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "parcel": "^2.7.0",
     "typescript": "^4.8.3"
   },
   "dependencies": {
@@ -28,8 +37,24 @@
     "gsap": "^3.11.3",
     "toastify-js": "^1.12.0"
   },
-  "prettier": "@peker/prettier-config",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoASilva/samurai-mack.git"
+  },
+  "keywords": [
+    "browser",
+    "game",
+    "fight",
+    "samurai"
+  ],
+  "bugs": {
+    "url": "https://github.com/MarcoASilva/samurai-mack/issues"
+  },
+  "homepage": "https://github.com/MarcoASilva/samurai-mack#readme",
+  "author": "marco.up.bsi@gmail.com",
+  "license": "ISC",
   "eslintConfig": {
     "extends": "@peker"
-  }
+  },
+  "prettier": "@peker/prettier-config"
 }

@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
-import { Config } from '@/types/config.type';
-import { Fighter } from '@/types/fighter.interface';
+import { Config } from '../types/config.type';
+import { Fighter } from '../types/fighter.interface';
 
 export type UIElements =
   | 'timer'

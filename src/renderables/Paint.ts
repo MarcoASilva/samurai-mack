@@ -1,4 +1,4 @@
-import { Renderable } from '@/types/renderable.interface';
+import { Renderable } from '../types/renderable.interface';
 
 export interface PaintParams {
   canvas: CanvasRenderingContext2D;

@@ -1,6 +1,6 @@
-import { Command } from '@/types/general-interfaces.js';
-import { InputListener } from '@/types/input-listener.interface.js';
-import { BaseListener } from './BaseListener.js';
+import { Command } from '../types/general-interfaces';
+import { InputListener } from '../types/input-listener.interface';
+import { BaseListener } from './BaseListener';
 
 type KeyboardCommands = {
   [key in Command]: number;

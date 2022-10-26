@@ -1,4 +1,4 @@
-import { Controller } from '@/types/controller.interface';
+import { Controller } from '../types/controller.interface';
 import { Fighter } from './fighter.interface';
 import { Renderable } from './renderable.interface';
 import { Renderer } from './renderer.interface';

@@ -1,14 +1,15 @@
 {
-  "include": ["src", "config"],
+  "include": ["src", "config", "conf"],
   "compilerOptions": {
     "baseUrl": ".",
     "target": "ES6",
-    "outDir": "public/dist",
+    "outDir": "dist/app",
     "rootDir": ".",
-    "paths": { "@/*": ["src/*"], "@core": ["src/core/index.ts"] },
     "noEmitOnError": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "moduleResolution": "Node",
     "lib": ["es2018", "dom", "dom.iterable"]
   }

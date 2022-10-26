@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "CANVAS_HEIGHT": 576,
+    "CANVAS_WIDTH": 1024,
+    "GRAVITY": 0.7,
+    "FLOOR_Y": 479,
+    "LEFT_BORDER_X": 0,
+    "RIGHT_BORDER_X": 1024,
+    "CEILING_Y": 0,
+    "ROUND_TIME": 30,
+    "STARTING_HEALTH_POINTS": 100
+  },
+  "canvas": {
+    "width": 576,
+    "height": 1024
+  },
+  "controls": {
+    "gamepads": {
+      "default": {
+        "left": 14,
+        "right": 15,
+        "jump": 0,
+        "attack": 2
+      },
+      "Wireless controller (STANDARD GAMEPAD Vendor: 054c Product: 05c4)": {
+        "left": 14,
+        "right": 15,
+        "jump": 0,
+        "attack": 2
+      }
+    },
+    "keyboard": {
+      "player1": {
+        "left": "a",
+        "right": "d",
+        "jump": "w",
+        "attack": " "
+      },
+      "player2": {
+        "left": "ArrowLeft",
+        "right": "ArrowRight",
+        "jump": "ArrowUp",
+        "attack": "ArrowDown"
+      }
+    }
+  }
+}
