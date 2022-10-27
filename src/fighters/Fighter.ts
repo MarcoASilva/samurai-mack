@@ -121,7 +121,11 @@ export class Fighter implements FighterInterface {
 
     this.currentSprite = currentSprite ?? this.sprites.idle[direction];
 
-    this.commandListener = commandListener;
+    if (commandListener) {
+      this.commandListener = commandListener;
+      this.listenCommands(this.commandListener);
+    }
+
     this.listenCommands(this.commandListener);
   }
 
@@ -165,7 +169,7 @@ export class Fighter implements FighterInterface {
     );
   }
 
-  listenCommands(commandListener) {
+  listenCommands(commandListener: InputListener) {
     commandListener.on(
       'left',
       this.startRunningLeft.bind(this),
@@ -205,11 +209,11 @@ export class Fighter implements FighterInterface {
   }
 
   start() {
-    this.commandListener.start();
+    this.commandListener?.start();
   }
 
   stop() {
-    this.commandListener.stop();
+    this.commandListener?.stop();
     this.controls.left = 0;
     this.controls.right = 0;
   }

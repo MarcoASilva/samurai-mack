@@ -24,7 +24,7 @@ const lightningRunPlugin: Plugin = context => {
 };
 
 const superSpeedPlugin: Plugin = context => {
-  context.players[0].fighter.runVelocity = 10;
+  context.players[0].fighter.attributes.runVelocity = 10;
   (context as any).fuck = true;
   return context;
 };

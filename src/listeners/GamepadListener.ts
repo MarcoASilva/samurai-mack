@@ -92,7 +92,7 @@ export class GamepadListener extends BaseListener implements InputListener {
   _readButtons() {
     Object.assign(this.state.previous, this.state.current);
 
-    this.axisXValue = Math.round((this.gamepad?.axes?.[0] || 0) * 100);
+    this.axisXValue = Math.round(this.gamepad?.axes?.[0] * 100);
 
     this.state.current.left = Boolean(
       this.gamepad?.buttons?.[this.commands?.left]?.pressed ||

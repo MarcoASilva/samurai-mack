@@ -30,12 +30,15 @@ export const setup = (config: Config): GameContext => {
     canvas: canvas,
     position: { x: 0, y: 0 },
     imageSrc: './img/background.png',
+    scale: 1,
   });
 
   const shop = new Sprite({
     canvas: canvas,
     position: { x: 600, y: 128 },
     imageSrc: './img/shop_anim.png',
+    scale: 2.75,
+    framesMax: 6,
   });
 
   const player1KeyboardListener = new KeyboardListener({

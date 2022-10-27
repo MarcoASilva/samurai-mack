@@ -1,18 +1,11 @@
 {
-  "rules": {
-    "CANVAS_HEIGHT": 576,
-    "CANVAS_WIDTH": 1024,
-    "GRAVITY": 0.7,
-    "FLOOR_Y": 479,
-    "LEFT_BORDER_X": 0,
-    "RIGHT_BORDER_X": 1024,
-    "CEILING_Y": 0,
-    "ROUND_TIME": 30,
-    "STARTING_HEALTH_POINTS": 100
-  },
   "game": {
     "gravity": 0.7,
-    "roundTime": 10
+    "roundTime": 20
+  },
+  "canvas": {
+    "width": 1024,
+    "height": 576
   },
   "stage": {
     "floorY": 479,
@@ -263,10 +256,6 @@
         }
       }
     }
-  },
-  "canvas": {
-    "width": 1024,
-    "height": 576
   },
   "controls": {
     "gamepads": {

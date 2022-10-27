@@ -22,11 +22,16 @@
       font-size: 1.4em;
     }
     body {
-      background: linear-gradient(45deg, #4b6cb7, #182848);
+      /* background: linear-gradient(45deg, #4b6cb7, #182848); */
+      display: flex;
+      justify-content: space-around;
+      background: #111;
+      border: solid 5px #222;
+      border-radius: 10px;
     }
     body canvas {
-      width: 99vw;
-      height: 98vh;
+      width: 80vw;
+      height: 90%;
     }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,107 +48,99 @@
 </head>
 <body>
   <!-- red container div -->
-  <div style="position: relative; display: inline-block">
-    <!-- smaller red container div -->
-    <div
-      style="
-        position: absolute;
-        display: flex;
-        width: 100%;
-        align-items: center;
-        padding: 20px;
-      "
-    >
-      <!-- player 1 health -->
+  <div style="display: flex; align-items: center">
+    <div style="position: relative; display: inline-block">
+      <!-- smaller red container div -->
       <div
         style="
-          position: relative;
-          width: 100%;
+          position: absolute;
           display: flex;
-          justify-content: flex-end;
-          border-top: 4px solid #fff;
-          border-bottom: 4px solid #fff;
-          border-left: 4px solid #fff;
+          width: 100%;
+          align-items: center;
+          padding: 20px;
         "
       >
-        <div style="background-color: red; height: 30px; width: 100%"></div>
+        <!-- player 1 health -->
         <div
-          id="player1Health"
           style="
-            position: absolute;
-            background: #818cf8;
-            top: 0;
-            right: 0;
-            bottom: 0;
+            position: relative;
             width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 4px solid #fff;
+            border-bottom: 4px solid #fff;
+            border-left: 4px solid #fff;
+          "
+        >
+          <div style="background-color: red; height: 30px; width: 100%"></div>
+          <div
+            id="player1Health"
+            style="
+              position: absolute;
+              background: #818cf8;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              width: 100%;
+            "
+          ></div>
+        </div>
+        <!-- timer -->
+        <div
+          id="timer"
+          style="
+            background-color: black;
+            height: 100px;
+            width: 50px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 4px solid #fff;
           "
         ></div>
+        <!-- player 2 health -->
+        <div
+          style="
+            position: relative;
+            width: 100%;
+            border-top: 4px solid #fff;
+            border-right: 4px solid #fff;
+            border-bottom: 4px solid #fff;
+          "
+        >
+          <div style="background-color: red; height: 30px"></div>
+          <div
+            id="player2Health"
+            style="
+              position: absolute;
+              background: #818cf8;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+            "
+          ></div>
+        </div>
       </div>
-      <!-- timer -->
       <div
-        id="timer"
+        id="displayText"
         style="
-          background-color: black;
-          height: 100px;
-          width: 50px;
-          flex-shrink: 0;
+          position: absolute;
+          color: white;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
-          border: 4px solid #fff;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: none;
         "
       ></div>
-      <!-- player 2 health -->
-      <div
-        style="
-          position: relative;
-          width: 100%;
-          border-top: 4px solid #fff;
-          border-right: 4px solid #fff;
-          border-bottom: 4px solid #fff;
-        "
-      >
-        <div style="background-color: red; height: 30px"></div>
-        <div
-          id="player2Health"
-          style="
-            position: absolute;
-            background: #818cf8;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-          "
-        ></div>
-      </div>
+      <canvas> </canvas>
     </div>
-    <div
-      id="displayText"
-      style="
-        position: absolute;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        display: none;
-      "
-    ></div>
-    <canvas> </canvas>
   </div>
-  <!-- <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"
-    integrity="sha512-Mf/xUqfWvDIr+1B6zfnIDIiG7XHzyP/guXUWgV6PgaQoIFeXkJQR5XWh9fqAiCiRCpemabt3naV4jhDWVnuYDQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  ></script>
-  <script
-    type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/toastify-js"
-  ></script> -->
   <script src="./modern/index.js"></script>
 </body>
