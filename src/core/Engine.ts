@@ -92,12 +92,15 @@ export class GameEngine implements Engine {
   }
 
   private setPlayersDirections() {
-    if (this.context.player1.position.x > this.context.player2.position.x) {
-      this.context.player1.direction = 'left';
-      this.context.player2.direction = 'right';
+    if (
+      this.context.players[0].fighter.position.x >
+      this.context.players[1].fighter.position.x
+    ) {
+      this.context.players[0].fighter.direction = 'left';
+      this.context.players[1].fighter.direction = 'right';
     } else {
-      this.context.player1.direction = 'right';
-      this.context.player2.direction = 'left';
+      this.context.players[0].fighter.direction = 'right';
+      this.context.players[1].fighter.direction = 'left';
     }
   }
 
@@ -105,32 +108,32 @@ export class GameEngine implements Engine {
     // check if player1 hit player2
     if (
       this.rectangularCollition({
-        rectangle1: this.context.player1,
-        rectangle2: this.context.player2,
+        rectangle1: this.context.players[0].fighter,
+        rectangle2: this.context.players[1].fighter,
       }) &&
-      this.context.player1.isAttacking &&
-      this.context.player1.currentSprite.framesCurrent === 4
+      this.context.players[0].fighter.isAttacking &&
+      this.context.players[0].fighter.currentSprite.framesCurrent === 4
     ) {
-      this.context.player2.takeHit();
-      this.context.player1.isAttacking = false;
+      this.context.players[1].fighter.takeHit();
+      this.context.players[0].fighter.isAttacking = false;
       gsap.to(this.context.htmlElements.p2HealthElement, {
-        width: `${this.context.player2.health}%`,
+        width: `${this.context.players[1].fighter.health}%`,
       });
     }
 
     // check if player2 hit player1
     if (
       this.rectangularCollition({
-        rectangle1: this.context.player2,
-        rectangle2: this.context.player1,
+        rectangle1: this.context.players[1].fighter,
+        rectangle2: this.context.players[0].fighter,
       }) &&
-      this.context.player2.isAttacking &&
-      this.context.player2.currentSprite.framesCurrent === 2
+      this.context.players[1].fighter.isAttacking &&
+      this.context.players[1].fighter.currentSprite.framesCurrent === 2
     ) {
-      this.context.player1.takeHit();
-      this.context.player2.isAttacking = false;
+      this.context.players[0].fighter.takeHit();
+      this.context.players[1].fighter.isAttacking = false;
       gsap.to(this.context.htmlElements.p1HealthElement, {
-        width: `${this.context.player1.health}%`,
+        width: `${this.context.players[0].fighter.health}%`,
       });
     }
   }
@@ -145,7 +148,10 @@ export class GameEngine implements Engine {
   }
 
   private checkPlayersHealth() {
-    if (this.context.player1.health <= 0 || this.context.player2.health <= 0) {
+    if (
+      this.context.players[0].fighter.health <= 0 ||
+      this.context.players[1].fighter.health <= 0
+    ) {
       this.endGame();
     }
   }
@@ -155,19 +161,28 @@ export class GameEngine implements Engine {
   }
 
   private determineResult() {
-    if (this.context.player1.health === this.context.player2.health) {
+    if (
+      this.context.players[0].fighter.health ===
+      this.context.players[1].fighter.health
+    ) {
       this.gameResult.winner = null;
-    } else if (this.context.player1.health > this.context.player2.health) {
-      this.gameResult.winner = this.context.player1;
-    } else if (this.context.player2.health > this.context.player1.health) {
-      this.gameResult.winner = this.context.player2;
+    } else if (
+      this.context.players[0].fighter.health >
+      this.context.players[1].fighter.health
+    ) {
+      this.gameResult.winner = this.context.players[0].fighter;
+    } else if (
+      this.context.players[1].fighter.health >
+      this.context.players[0].fighter.health
+    ) {
+      this.gameResult.winner = this.context.players[1].fighter;
     }
   }
 
   private endAfterAnimationIsComplete() {
     if (
-      this.context.player1.hasPendingAnimation() ||
-      this.context.player2.hasPendingAnimation()
+      this.context.players[0].fighter.hasPendingAnimation() ||
+      this.context.players[1].fighter.hasPendingAnimation()
     ) {
       return;
     }
@@ -193,8 +208,7 @@ export class GameEngine implements Engine {
       this.checkAttacks,
       this.checkPlayersHealth,
     ];
-    this.context.player1.start();
-    this.context.player2.start();
+    this.context.players.forEach(p => p.fighter.start());
     this.context.timer.run().then(this.endGame.bind(this));
   }
 
@@ -205,8 +219,7 @@ export class GameEngine implements Engine {
   ) {
     this.state = GameEngine.STATE.Stopped;
     this.context.timer.stop();
-    this.context.player1.stop();
-    this.context.player2.stop();
+    this.context.players.forEach(p => p.fighter.start());
     if (continueRendering) {
       this.steps = [this.render];
     } else {
