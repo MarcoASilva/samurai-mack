@@ -38,9 +38,7 @@ export class Paint implements Renderable {
     this.canvas.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  animateFrames() {}
-
-  update() {
+  render() {
     this.draw();
   }
 }

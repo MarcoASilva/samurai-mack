@@ -1,5 +1,6 @@
 import { Sprite as SpriteInterface } from '../types/sprite.interface';
 import { XYCoordinates } from '../types/general-interfaces';
+import { Renderable } from 'src/types/renderable.interface';
 
 export interface SpriteParams {
   canvas: CanvasRenderingContext2D;
@@ -93,7 +94,7 @@ export class Sprite implements SpriteInterface {
    * This is the method that gets called every frame to re-render Sprite
    * This method also contains the logics for the updateing positions, animations, inner workings and the drawing itself
    */
-  update() {
+  render() {
     this.draw();
     this.animateFrames();
   }

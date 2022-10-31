@@ -116,8 +116,9 @@ export class GameEngine implements Engine {
     ) {
       this.context.players[1].fighter.takeHit();
       this.context.players[0].fighter.isAttacking = false;
-      gsap.to(this.context.htmlElements.p2HealthElement, {
-        width: `${this.context.players[1].fighter.health}%`,
+      this.context.hud.updateHealthBar({
+        bar: 1,
+        percentage: this.context.players[1].fighter.health,
       });
     }
 
@@ -132,19 +133,15 @@ export class GameEngine implements Engine {
     ) {
       this.context.players[0].fighter.takeHit();
       this.context.players[1].fighter.isAttacking = false;
-      gsap.to(this.context.htmlElements.p1HealthElement, {
-        width: `${this.context.players[0].fighter.health}%`,
+      this.context.hud.updateHealthBar({
+        bar: 0,
+        percentage: this.context.players[0].fighter.health,
       });
     }
   }
 
   private displayWinner() {
-    if (this.gameResult.winner) {
-      this.context.htmlElements.centerTextElement.innerHTML = `${this.gameResult.winner.playerName} Wins`;
-    } else {
-      this.context.htmlElements.centerTextElement.innerHTML = 'Tie';
-    }
-    this.context.htmlElements.centerTextElement.style.display = 'flex';
+    this.context.hud.displayeWinner(this.gameResult.winner);
   }
 
   private checkPlayersHealth() {
@@ -156,8 +153,8 @@ export class GameEngine implements Engine {
     }
   }
 
-  private render() {
-    this.context.renderer.update();
+  private update() {
+    this.context.components.forEach(c => c.update());
   }
 
   private determineResult() {
@@ -203,13 +200,13 @@ export class GameEngine implements Engine {
   start() {
     this.state = GameEngine.STATE.Started;
     this.steps = [
-      this.render,
+      this.update,
       this.setPlayersDirections,
       this.checkAttacks,
       this.checkPlayersHealth,
     ];
     this.context.players.forEach(p => p.fighter.start());
-    this.context.timer.run().then(this.endGame.bind(this));
+    this.context.hud.timer.run().then(this.endGame.bind(this));
   }
 
   stop(
@@ -218,10 +215,10 @@ export class GameEngine implements Engine {
     },
   ) {
     this.state = GameEngine.STATE.Stopped;
-    this.context.timer.stop();
-    this.context.players.forEach(p => p.fighter.start());
+    this.context.hud.timer.stop();
+    this.context.players.forEach(p => p.fighter.stop());
     if (continueRendering) {
-      this.steps = [this.render];
+      this.steps = [this.update];
     } else {
       this.steps = [];
     }

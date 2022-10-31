@@ -1,9 +1,8 @@
+import { Hud } from 'src/core/Hud';
 import { Controller } from '../types/controller.interface';
 import { Fighter } from './fighter.interface';
+import { LogicalComponent } from './logical-component.interface';
 import { Renderable } from './renderable.interface';
-import { Renderer } from './renderer.interface';
-import { Sprite } from './sprite.interface';
-import { Timer } from './timer.interface';
 
 export interface User {
   id: number;
@@ -40,19 +39,7 @@ export interface GameContextHtmlElements {
 
 export interface GameContext {
   canvas: CanvasRenderingContext2D;
-  htmlElements: GameContextHtmlElements;
-  sprites: GameContextSprites;
-  renderer: Renderer;
-  timer: Timer;
+  components: LogicalComponent[];
   players: GameContextPlayers[];
-
-  /**
-   * @deprecated The property should not be used
-   */
-  player1: Fighter;
-
-  /**
-   * @deprecated The property should not be used
-   */
-  player2: Fighter;
+  hud: Hud;
 }

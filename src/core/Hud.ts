@@ -1,102 +1,77 @@
 import { gsap } from 'gsap';
-import { Config } from '../types/config.type';
 import { Fighter } from '../types/fighter.interface';
+import { Timer } from './Timer';
+import {
+  Hud as HudInterface,
+  HudParams,
+  WriteParams,
+} from '../types/hud.interface';
 
-export type UIElements =
-  | 'timer'
-  | 'canvas'
-  | 'player1Health'
-  | 'player2Health'
-  | 'centeredText';
+const ONE_HOUR_IN_MS = 3_600_000;
 
-export interface WriteOptions {
-  /** Horizontal placement */
-  horizontalPosition?: 'left' | 'center' | 'right';
-  /** Vertical placement */
-  verticalPosition?: 'top' | 'center' | 'bottom';
-  /** Text size */
-  size?: 'small' | 'medium' | 'big';
-  /** CSS-like color (rgb, rgba, hex, named colors) */
-  color?: string;
-  /** Duration time (in millis) for the text to be displayed */
-  duration?: number;
-}
+export class Hud implements HudInterface {
+  timer: Timer;
+  healthBars: [HTMLDivElement, HTMLDivElement];
+  centerText: HTMLDivElement;
 
-export interface HudParams {
-  elementIds: {
-    [key in UIElements]: string;
-  };
-  config: Config['screen'];
-}
+  private centerTextTimeoutId: number;
 
-type HudElements = {
-  [key in UIElements]: key extends 'canvas'
-    ? HTMLCanvasElement
-    : HTMLDivElement;
-};
+  constructor({ config }: HudParams) {
+    this.centerText = document.querySelector(config.hud.centerText);
 
-const SEL = '#';
+    this.timer = new Timer({
+      timerElement: document.querySelector(config.hud.timer),
+      roundTime: config.game.roundTime,
+    });
 
-export class Hud {
-  elements: HudElements;
-  canvas: CanvasRenderingContext2D;
-  config: Config['screen'];
+    this.healthBars = [
+      document.querySelector(config.hud.player1HealthBar),
+      document.querySelector(config.hud.player1HealthBar),
+    ];
 
-  constructor({
-    elementIds: { canvas, timer, player1Health, player2Health, centeredText },
-    config,
-  }: HudParams) {
-    this.config = config;
-    this.elements.canvas = document.querySelector(SEL + canvas);
-    this.elements.timer = document.querySelector(SEL + timer);
-    this.elements.player1Health = document.querySelector(SEL + player1Health);
-    this.elements.player2Health = document.querySelector(SEL + player2Health);
-    this.elements.centeredText = document.querySelector(SEL + centeredText);
-
+    this.healthBars.forEach(bar => (bar.style.width = '100%'));
+    this.centerText.style.display = 'none';
     this.validate();
-
-    this.canvas = this.elements.canvas.getContext('2d');
   }
 
-  validate() {
-    if (!this.elements.canvas) {
-      throw new Error(`Canvas element not found`);
-    }
-    if (this.elements.canvas.nodeName !== 'CANVAS') {
+  private validate() {
+    // if (!this.elements.canvas) {
+    //   throw new Error(`Canvas element not found`);
+    // }
+    // if (this.elements.canvas.nodeName !== 'CANVAS') {
+    //   throw new Error(
+    //     `Canvas element must be of type <canvas>. Instead got ${this.elements.canvas.nodeName}`,
+    //   );
+    // }
+    // try {
+    //   if (
+    //     !this.elements.canvas.getContext('2d').drawImage ||
+    //     !this.elements.canvas.getContext('2d').fill
+    //   ) {
+    //     throw new Error('Canvas not supported');
+    //   }
+    // } catch (error) {
+    //   throw new Error('Canvas not supported');
+    //   console.log(error);
+    // }
+
+    const missingHudElements = [
+      { name: 'timer', element: this.timer.timerElement },
+      { name: 'centerText', element: this.centerText },
+      ...this.healthBars.map((element, i) => ({
+        name: `healthbar-${i}`,
+        element,
+      })),
+    ].filter(item => item.element?.nodeName !== 'DIV');
+
+    if (missingHudElements.length) {
+      console.debug(missingHudElements);
       throw new Error(
-        `Canvas element must be of type <canvas>. Instead got ${this.elements.canvas.nodeName}`,
+        `Missing elements in HUD: ${missingHudElements
+          .map(e => e.name)
+          .join(', ')}`,
       );
     }
-    try {
-      if (
-        !this.elements.canvas.getContext('2d').drawImage ||
-        !this.elements.canvas.getContext('2d').fill
-      ) {
-        throw new Error('Canvas not supported');
-      }
-    } catch (error) {
-      throw new Error('Canvas not supported');
-      console.log(error);
-    }
-  }
-
-  start() {
-    this.elements.canvas.width = this.config.resolution.width;
-    this.elements.canvas.height = this.config.resolution.height;
-    this.elements.player1Health.style.width = '100%';
-    this.elements.player2Health.style.width = '100%';
-    this.elements.centeredText.style.display = 'none';
-  }
-
-  write(text: string, options: WriteOptions = { duration: 3000 }) {
-    // create logic to apply different options/styles to text
-    // maybe create a separate class to delegate this (e.g HTMLTextWriter)
-    this.elements.centeredText.innerHTML = text;
-    this.elements.centeredText.style.display = 'flex';
-    setTimeout(
-      () => (this.elements.centeredText.style.display = 'none'),
-      options.duration,
-    );
   }
 
   /**
@@ -105,25 +80,49 @@ export class Hud {
    */
   displayeWinner(winner: Fighter | null): void {
     if (winner) {
-      this.write(`${winner.playerName} Wins`, {
-        duration: Number.POSITIVE_INFINITY,
+      this.write({
+        text: `${winner.playerName} Wins`,
+        options: {
+          duration: ONE_HOUR_IN_MS,
+        },
       });
     } else {
-      this.write('Tie', {
-        duration: Number.POSITIVE_INFINITY,
+      this.write({
+        text: 'Tie',
+        options: {
+          duration: ONE_HOUR_IN_MS,
+        },
       });
     }
   }
 
-  updatePlayer1HealthBar(healthPointsPercentage: number): void {
-    gsap.to(this.elements.player1Health, {
-      width: `${healthPointsPercentage}%`,
-    });
+  /**
+   *
+   * Updates a given health bar in the healthbar list
+   */
+  updateHealthBar({
+    bar,
+    percentage,
+  }: {
+    bar: 0 | 1;
+    percentage: number;
+  }): void {
+    if (bar === 0) {
+      gsap.to(this.healthBars[bar], {
+        width: `${percentage}%`,
+      });
+    }
   }
 
-  updatePlayer2HealthBar(healthPointsPercentage: number): void {
-    gsap.to(this.elements.player1Health, {
-      width: `${healthPointsPercentage}%`,
-    });
+  write({ text, options: { duration } = { duration: 3000 } }: WriteParams) {
+    this.centerText.innerHTML = text;
+    this.centerText.style.display = 'flex';
+
+    clearTimeout(this.centerTextTimeoutId);
+
+    this.centerTextTimeoutId = setTimeout(
+      () => (this.centerText.style.display = 'none'),
+      duration,
+    );
   }
 }

@@ -1,45 +1,25 @@
-import { Fighter } from '../fighters/Fighter';
+import { Fighter } from '../components/Fighter';
 import { CharacterType } from '../types/fighter.interface';
 import { Controller } from '../controllers/Controller';
 import { CommandListener } from '../listeners/CommandListener';
 import { GamepadListener } from '../listeners/GamepadListener';
 import { KeyboardListener } from '../listeners/KeyboardListener';
-import { Paint } from '../renderables/Paint';
-import { Sprite } from '../renderables/Sprite';
 import { Config } from '../types/config.type';
 import { GameContext } from '../types/game-context.interface';
-import { Renderer } from './Renderer';
-import { Timer } from './Timer';
 import { Utils } from './Utils';
+import { Scenario } from '../components/Scenario';
+import { Hud } from './Hud';
 
 export const setup = (config: Config): GameContext => {
-  const {
-    canvasElement,
-    timerElement,
-    p1HealthElement,
-    p2HealthElement,
-    centerTextElement,
-  } = Utils.getHtmlElements();
+  const { canvasElement } = Utils.getHtmlElements();
 
   const canvas = canvasElement.getContext('2d');
 
   canvasElement.width = config.canvas.width;
   canvasElement.height = config.canvas.height;
 
-  const background = new Sprite({
-    canvas: canvas,
-    position: { x: 0, y: 0 },
-    imageSrc: './img/background.png',
-    scale: 1,
-  });
-
-  const shop = new Sprite({
-    canvas: canvas,
-    position: { x: 600, y: 128 },
-    imageSrc: './img/shop_anim.png',
-    scale: 2.75,
-    framesMax: 6,
-  });
+  const scenario = new Scenario(config, canvas);
+  const hud = new Hud({ config });
 
   const player1KeyboardListener = new KeyboardListener({
     left: 'a',
@@ -151,54 +131,10 @@ export const setup = (config: Config): GameContext => {
     fighter: player2,
   });
 
-  const reset = new Paint({
-    canvas: canvas,
-    color: 'black',
-    x: 0,
-    y: 0,
-    width: 1024,
-    height: 576,
-  });
-
-  const contrast = new Paint({
-    canvas: canvas,
-    color: 'rgba(255,255,255, 0.15)',
-    x: 0,
-    y: 0,
-    width: 1024,
-    height: 576,
-  });
-
-  const renderer = new Renderer({
-    sprites: [reset, background, shop, contrast, player1, player2],
-  });
-
-  const timer = new Timer({
-    timerElement,
-    roundTime: config.game.roundTime,
-  });
-
   return {
     canvas,
-    htmlElements: {
-      canvasElement,
-      timerElement,
-      p1HealthElement,
-      p2HealthElement,
-      centerTextElement,
-    },
-    sprites: {
-      reset,
-      background,
-      shop,
-      contrast,
-      player1,
-      player2,
-    },
-    renderer,
-    timer,
-    player1,
-    player2,
+    hud,
+    components: [scenario, player1, player2],
     players: [
       {
         controller: player1Controller,

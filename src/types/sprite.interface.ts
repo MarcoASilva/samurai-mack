@@ -28,5 +28,4 @@ export interface Sprite extends Renderable {
   draw(): void;
   animateFrames(): void;
   invert(): void;
-  update(): void;
 }

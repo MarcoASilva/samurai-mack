@@ -1,6 +1,7 @@
 import { Config } from './config.type';
 import { XYCoordinates } from './general-interfaces';
 import { InputListener } from './input-listener.interface';
+import { LogicalComponent } from './logical-component.interface';
 import { Sprite } from './sprite.interface';
 
 export type FighterAnimationType =
@@ -56,7 +57,8 @@ export interface CharacterAttributes {
 }
 
 export interface Fighter
-  extends Required<Omit<FighterParams, 'config' | 'canvas'>> {
+  extends LogicalComponent,
+    Required<Omit<FighterParams, 'config' | 'canvas'>> {
   /** state flags */
   isGettingHit: boolean;
   isAttacking: boolean;

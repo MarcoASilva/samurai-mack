@@ -40,12 +40,12 @@ export class Utils {
   }
 
   static getHtmlElements() {
-    document.querySelector<HTMLDivElement>('#player1Health').style.width =
-      '100%';
-    document.querySelector<HTMLDivElement>('#player2Health').style.width =
-      '100%';
-    document.querySelector<HTMLDivElement>('#displayText').style.display =
-      'none';
+    // document.querySelector<HTMLDivElement>('#player1Health').style.width =
+    //   '100%';
+    // document.querySelector<HTMLDivElement>('#player2Health').style.width =
+    //   '100%';
+    // document.querySelector<HTMLDivElement>('#displayText').style.display =
+    //   'none';
     return {
       canvasElement: document.querySelector('canvas'),
       timerElement: document.querySelector<HTMLDivElement>('#timer'),

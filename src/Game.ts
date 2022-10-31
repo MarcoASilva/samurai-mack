@@ -87,10 +87,10 @@ class Game {
       throw new Error('Cannot start a Game that is already in progress');
     }
     this.engine.start();
+    this.listeners.start({ context: this.context });
     this.animationFrameRequest = window.requestAnimationFrame(
       this.loop.bind(this),
     );
-    this.listeners.start({ context: this.context });
   }
 
   stop(
@@ -116,6 +116,7 @@ class Game {
       throw new Error('Game must be stopped in order to reset.');
     }
     this.engine.context = _setup(config ?? this.config);
+    this.engine.state = GameEngine.STATE.New;
   }
 
   /**

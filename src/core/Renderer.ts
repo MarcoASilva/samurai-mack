@@ -16,6 +16,6 @@ export class Renderer {
   }
 
   update() {
-    this.sprites.forEach(sprite => sprite.update());
+    this.sprites.forEach(sprite => sprite.render());
   }
 }

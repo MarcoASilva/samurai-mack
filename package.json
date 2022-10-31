@@ -16,6 +16,7 @@
     }
   },
   "scripts": {
+    "check": "tsc --noEmit",
     "build": "rm -rf dist && cp -r public dist && parcel build --no-cache",
     "serve": "live-server dist",
     "start": "npm run build && npm run serve",

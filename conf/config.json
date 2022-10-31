@@ -1,4 +1,10 @@
 {
+  "hud": {
+    "timer": "#timer",
+    "player1HealthBar": "#player1HealthBar",
+    "player2HealthBar": "#player2HealthBar",
+    "centerText": "#centerText"
+  },
   "game": {
     "gravity": 0.7,
     "roundTime": 20
@@ -12,6 +18,11 @@
     "leftBorderX": 0,
     "rightBorderX": 1024,
     "ceilingY": 0
+  },
+  "scenario": {
+    "contrast": "rgba(255,255,255, 0.15)",
+    "background": "./img/background.png",
+    "shop": "./img/shop_anim.png"
   },
   "character": {
     "kenji": {

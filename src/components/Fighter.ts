@@ -13,8 +13,9 @@ import { InputListener } from '../types/input-listener.interface';
 import { Sprite as SpriteInterface } from '../types/sprite.interface';
 import { Sprite } from '../renderables/Sprite';
 import { Config } from '../types/config.type';
+import { LogicalComponent } from 'src/types/logical-component.interface';
 
-export class Fighter implements FighterInterface {
+export class Fighter implements FighterInterface, LogicalComponent {
   character: Character;
   playerName: string;
   position: XYCoordinates;
@@ -264,7 +265,7 @@ export class Fighter implements FighterInterface {
       this.currentSprite.draw();
       return;
     }
-    this.currentSprite.update();
+    this.currentSprite.render();
     this.updatePlayerPosition();
     this.updateAttackPosition();
     this.applyGravity();
