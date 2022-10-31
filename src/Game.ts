@@ -1,5 +1,5 @@
 import { Config } from './types/config.type';
-import { Fighter } from './types/fighter.interface';
+import { Character } from './types/character.interface';
 import { GameContext } from './types/game-context.interface';
 import { GameEngine, setup as _setup } from './core/Index';
 import { EngineEventHandler } from './types/engine.interface';
@@ -8,7 +8,7 @@ export type GameEvent = 'load' | 'start' | 'pause' | 'resume' | 'end';
 
 export type GameEventHandler<T> = (
   params: T extends 'end'
-    ? { context: GameContext; winner: Fighter | null }
+    ? { context: GameContext; winner: Character | null }
     : T extends 'load' | 'start' | 'pause' | 'resume'
     ? { context: GameContext }
     : never,

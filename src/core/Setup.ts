@@ -1,5 +1,5 @@
-import { Fighter } from '../components/Fighter';
-import { CharacterType } from '../types/fighter.interface';
+import { Character } from '../components/Character';
+import { CharacterType } from '../types/character.interface';
 import { Controller } from '../controllers/Controller';
 import { CommandListener } from '../listeners/CommandListener';
 import { GamepadListener } from '../listeners/GamepadListener';
@@ -96,11 +96,11 @@ export const setup = (config: Config): GameContext => {
     }
   });
 
-  const player1 = new Fighter({
+  const player1 = new Character({
     commandListener: player1CommandListener,
     config,
     canvas,
-    character: CharacterType.Mack,
+    character: 'mack',
     playerName: 'Player 1',
     direction: 'right',
     position: {
@@ -109,9 +109,9 @@ export const setup = (config: Config): GameContext => {
     },
   });
 
-  const player2 = new Fighter({
+  const player2 = new Character({
     commandListener: player2CommandListener,
-    character: CharacterType.Kenji,
+    character: 'kenji',
     playerName: 'ROGERIO123',
     direction: 'left',
     config,
@@ -124,11 +124,11 @@ export const setup = (config: Config): GameContext => {
 
   const player1Controller = new Controller({
     commandListener: player1CommandListener,
-    fighter: player1,
+    character: player1,
   });
   const player2Controller = new Controller({
     commandListener: player2CommandListener,
-    fighter: player2,
+    character: player2,
   });
 
   return {
@@ -138,12 +138,12 @@ export const setup = (config: Config): GameContext => {
     players: [
       {
         controller: player1Controller,
-        fighter: player1,
+        character: player1,
         user: null!,
       },
       {
         controller: player2Controller,
-        fighter: player2,
+        character: player2,
         user: null!,
       },
     ],

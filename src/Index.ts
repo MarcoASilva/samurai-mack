@@ -8,15 +8,15 @@ const contextLoggerPlugin: Plugin = context => {
 };
 
 const lightningRunPlugin: Plugin = context => {
-  context.players[0].fighter.sprites.run.left = new Sprite({
+  context.players[0].character.sprites.run.left = new Sprite({
     canvas: context.canvas,
-    position: context.players[0].fighter.position,
+    position: context.players[0].character.position,
     imageSrc: 'http:google.com.br/favicon.png',
     framesMax: 7,
   });
-  context.players[0].fighter.sprites.run.right = new Sprite({
+  context.players[0].character.sprites.run.right = new Sprite({
     canvas: context.canvas,
-    position: context.players[0].fighter.position,
+    position: context.players[0].character.position,
     imageSrc: 'http:google.com.br/favicon.png',
     framesMax: 7,
   });
@@ -24,7 +24,7 @@ const lightningRunPlugin: Plugin = context => {
 };
 
 const superSpeedPlugin: Plugin = context => {
-  context.players[0].fighter.attributes.runVelocity = 10;
+  context.players[0].character.attributes.runVelocity = 10;
   (context as any).fuck = true;
   return context;
 };

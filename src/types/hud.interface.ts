@@ -1,5 +1,5 @@
 import { Config } from './config.type';
-import { Fighter } from './fighter.interface';
+import { Character } from './character.interface';
 
 export interface WriteOptions {
   /** Horizontal placement */
@@ -24,7 +24,7 @@ export interface HudParams {
 }
 
 export interface Hud {
-  displayeWinner(winner: Fighter | null): void;
+  displayeWinner(winner: Character | null): void;
   updateHealthBar({
     bar,
     percentage,

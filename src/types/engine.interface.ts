@@ -1,18 +1,18 @@
-import { Fighter } from './fighter.interface';
+import { Character } from './character.interface';
 import { GameContext } from './game-context.interface';
 
 export type EngineEvent = 'pause' | 'resume' | 'end';
 export type EngineState = 'New' | 'Started' | 'Stopped';
 
 export type EngineEventHandler<T> = (
-  params: T extends 'end' ? { winner?: Fighter } : never,
+  params: T extends 'end' ? { winner?: Character } : never,
 ) => void;
 export interface EngineParams {
   context: GameContext;
 }
 
 export interface GameResult {
-  winner: Fighter | null;
+  winner: Character | null;
 }
 
 export interface Engine {

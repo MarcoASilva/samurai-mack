@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { Fighter } from '../types/fighter.interface';
+import { Character } from '../types/character.interface';
 import { Timer } from './Timer';
 import {
   Hud as HudInterface,
@@ -26,7 +26,7 @@ export class Hud implements HudInterface {
 
     this.healthBars = [
       document.querySelector(config.hud.player1HealthBar),
-      document.querySelector(config.hud.player1HealthBar),
+      document.querySelector(config.hud.player2HealthBar),
     ];
 
     this.healthBars.forEach(bar => (bar.style.width = '100%'));
@@ -78,7 +78,7 @@ export class Hud implements HudInterface {
    *
    * Displays the winner of the match using "winner" preset style on the HUD
    */
-  displayeWinner(winner: Fighter | null): void {
+  displayeWinner(winner: Character | null): void {
     if (winner) {
       this.write({
         text: `${winner.playerName} Wins`,
@@ -107,11 +107,9 @@ export class Hud implements HudInterface {
     bar: 0 | 1;
     percentage: number;
   }): void {
-    if (bar === 0) {
-      gsap.to(this.healthBars[bar], {
-        width: `${percentage}%`,
-      });
-    }
+    gsap.to(this.healthBars[bar], {
+      width: `${percentage}%`,
+    });
   }
 
   write({ text, options: { duration } = { duration: 3000 } }: WriteParams) {

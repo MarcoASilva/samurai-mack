@@ -2,7 +2,7 @@ import {
   Controller as ControllerInterface,
   ControllerParams,
 } from '../types/controller.interface';
-import { Fighter } from '../types/fighter.interface';
+import { Character } from '../types/character.interface';
 import { Command } from '../types/general-interfaces';
 import {
   InputListener,
@@ -20,7 +20,7 @@ interface ControllerKeys {
 
 export class Controller implements ControllerInterface {
   commandListener: InputListener;
-  fighter: Fighter;
+  character: Character;
 
   private keys: ControllerKeys = {
     jump: {
@@ -50,9 +50,9 @@ export class Controller implements ControllerInterface {
     },
   };
 
-  constructor({ commandListener, fighter }: ControllerParams) {
+  constructor({ commandListener, character }: ControllerParams) {
     this.commandListener = commandListener;
-    this.fighter = fighter;
+    this.character = character;
 
     Object.keys(this.commands).forEach((command: Command) =>
       this.commandListener.on(
@@ -66,23 +66,23 @@ export class Controller implements ControllerInterface {
   // on press
 
   private handleKeyPressLeft() {
-    this.fighter.startRunningLeft();
+    this.character.startRunningLeft();
   }
 
   private handleKeyPressRight() {
-    this.fighter.startRunningRight();
+    this.character.startRunningRight();
   }
 
   private handleKeyPressJump() {
     if (this.keys.jump.released) {
-      this.fighter.jump();
+      this.character.jump();
     }
     this.keys.jump.released = false;
   }
 
   private handleKeyPressAttack() {
     if (this.keys.attack.released) {
-      this.fighter.attack();
+      this.character.attack();
     }
     this.keys.attack.released = false;
   }
@@ -90,11 +90,11 @@ export class Controller implements ControllerInterface {
   // on release
 
   private handleKeyReleaseLeft() {
-    this.fighter.stopRunningLeft();
+    this.character.stopRunningLeft();
   }
 
   private handleKeyReleaseRight() {
-    this.fighter.stopRunningRight();
+    this.character.stopRunningRight();
   }
 
   private handleKeyReleaseJump() {
@@ -117,24 +117,24 @@ export class Controller implements ControllerInterface {
 
   /** **IMPORTANT:** this method goes over all the rules and forces the movement */
   forceLeft(): void {
-    this.fighter.stopRunningRight();
-    this.fighter.startRunningLeft();
+    this.character.stopRunningRight();
+    this.character.startRunningLeft();
   }
 
   /** **IMPORTANT:** this method goes over all the rules and forces the movement */
   forceRight(): void {
-    this.fighter.stopRunningLeft();
-    this.fighter.startRunningRight();
+    this.character.stopRunningLeft();
+    this.character.startRunningRight();
   }
 
   /** **IMPORTANT:** this method goes over all the rules and forces the movement */
   forceJump(): void {
-    this.fighter.jump();
+    this.character.jump();
   }
 
   /** **IMPORTANT:** this method goes over all the rules and forces the movement */
   forceAttack(): void {
-    this.fighter.isAttacking = false;
-    this.fighter.attack();
+    this.character.isAttacking = false;
+    this.character.attack();
   }
 }

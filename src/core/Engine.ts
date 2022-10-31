@@ -1,11 +1,10 @@
-import { gsap } from 'gsap';
 import {
   Engine,
   EngineEvent,
   EngineEventHandler,
   EngineState,
 } from '../types/engine.interface';
-import { Fighter } from '../types/fighter.interface';
+import { Character } from '../types/character.interface';
 import { GameContext } from '../types/game-context.interface';
 
 export interface EngineParams {
@@ -62,8 +61,8 @@ export class GameEngine implements Engine {
     rectangle1,
     rectangle2,
   }: {
-    rectangle1: Fighter;
-    rectangle2: Fighter;
+    rectangle1: Character;
+    rectangle2: Character;
   }): boolean {
     if (rectangle1.direction === 'right') {
       return (
@@ -93,14 +92,14 @@ export class GameEngine implements Engine {
 
   private setPlayersDirections() {
     if (
-      this.context.players[0].fighter.position.x >
-      this.context.players[1].fighter.position.x
+      this.context.players[0].character.position.x >
+      this.context.players[1].character.position.x
     ) {
-      this.context.players[0].fighter.direction = 'left';
-      this.context.players[1].fighter.direction = 'right';
+      this.context.players[0].character.direction = 'left';
+      this.context.players[1].character.direction = 'right';
     } else {
-      this.context.players[0].fighter.direction = 'right';
-      this.context.players[1].fighter.direction = 'left';
+      this.context.players[0].character.direction = 'right';
+      this.context.players[1].character.direction = 'left';
     }
   }
 
@@ -108,34 +107,38 @@ export class GameEngine implements Engine {
     // check if player1 hit player2
     if (
       this.rectangularCollition({
-        rectangle1: this.context.players[0].fighter,
-        rectangle2: this.context.players[1].fighter,
+        rectangle1: this.context.players[0].character,
+        rectangle2: this.context.players[1].character,
       }) &&
-      this.context.players[0].fighter.isAttacking &&
-      this.context.players[0].fighter.currentSprite.framesCurrent === 4
+      this.context.players[0].character.isAttacking &&
+      this.context.players[0].character.currentSprite.framesCurrent === 4
     ) {
-      this.context.players[1].fighter.takeHit();
-      this.context.players[0].fighter.isAttacking = false;
+      this.context.players[1].character.takeHit(
+        this.context.players[0].character.attributes.attackPower,
+      );
+      this.context.players[0].character.isAttacking = false;
       this.context.hud.updateHealthBar({
         bar: 1,
-        percentage: this.context.players[1].fighter.health,
+        percentage: this.context.players[1].character.health,
       });
     }
 
     // check if player2 hit player1
     if (
       this.rectangularCollition({
-        rectangle1: this.context.players[1].fighter,
-        rectangle2: this.context.players[0].fighter,
+        rectangle1: this.context.players[1].character,
+        rectangle2: this.context.players[0].character,
       }) &&
-      this.context.players[1].fighter.isAttacking &&
-      this.context.players[1].fighter.currentSprite.framesCurrent === 2
+      this.context.players[1].character.isAttacking &&
+      this.context.players[1].character.currentSprite.framesCurrent === 2
     ) {
-      this.context.players[0].fighter.takeHit();
-      this.context.players[1].fighter.isAttacking = false;
+      this.context.players[0].character.takeHit(
+        this.context.players[1].character.attributes.attackPower,
+      );
+      this.context.players[1].character.isAttacking = false;
       this.context.hud.updateHealthBar({
         bar: 0,
-        percentage: this.context.players[0].fighter.health,
+        percentage: this.context.players[0].character.health,
       });
     }
   }
@@ -146,8 +149,8 @@ export class GameEngine implements Engine {
 
   private checkPlayersHealth() {
     if (
-      this.context.players[0].fighter.health <= 0 ||
-      this.context.players[1].fighter.health <= 0
+      this.context.players[0].character.health <= 0 ||
+      this.context.players[1].character.health <= 0
     ) {
       this.endGame();
     }
@@ -159,27 +162,27 @@ export class GameEngine implements Engine {
 
   private determineResult() {
     if (
-      this.context.players[0].fighter.health ===
-      this.context.players[1].fighter.health
+      this.context.players[0].character.health ===
+      this.context.players[1].character.health
     ) {
       this.gameResult.winner = null;
     } else if (
-      this.context.players[0].fighter.health >
-      this.context.players[1].fighter.health
+      this.context.players[0].character.health >
+      this.context.players[1].character.health
     ) {
-      this.gameResult.winner = this.context.players[0].fighter;
+      this.gameResult.winner = this.context.players[0].character;
     } else if (
-      this.context.players[1].fighter.health >
-      this.context.players[0].fighter.health
+      this.context.players[1].character.health >
+      this.context.players[0].character.health
     ) {
-      this.gameResult.winner = this.context.players[1].fighter;
+      this.gameResult.winner = this.context.players[1].character;
     }
   }
 
   private endAfterAnimationIsComplete() {
     if (
-      this.context.players[0].fighter.hasPendingAnimation() ||
-      this.context.players[1].fighter.hasPendingAnimation()
+      this.context.players[0].character.hasPendingAnimation() ||
+      this.context.players[1].character.hasPendingAnimation()
     ) {
       return;
     }
@@ -205,7 +208,7 @@ export class GameEngine implements Engine {
       this.checkAttacks,
       this.checkPlayersHealth,
     ];
-    this.context.players.forEach(p => p.fighter.start());
+    this.context.players.forEach(p => p.character.start());
     this.context.hud.timer.run().then(this.endGame.bind(this));
   }
 
@@ -216,7 +219,7 @@ export class GameEngine implements Engine {
   ) {
     this.state = GameEngine.STATE.Stopped;
     this.context.hud.timer.stop();
-    this.context.players.forEach(p => p.fighter.stop());
+    this.context.players.forEach(p => p.character.stop());
     if (continueRendering) {
       this.steps = [this.update];
     } else {

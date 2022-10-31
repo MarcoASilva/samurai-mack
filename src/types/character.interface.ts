@@ -4,7 +4,7 @@ import { InputListener } from './input-listener.interface';
 import { LogicalComponent } from './logical-component.interface';
 import { Sprite } from './sprite.interface';
 
-export type FighterAnimationType =
+export type CharacterAnimationType =
   | 'idle'
   | 'run'
   | 'jump'
@@ -13,38 +13,33 @@ export type FighterAnimationType =
   | 'takeHit'
   | 'death';
 
-export type FighterDirection = 'left' | 'right';
-export interface FighterAttackBox {
+export type CharacterDirection = 'left' | 'right';
+export interface CharacterAttackBox {
   position: XYCoordinates;
   offset: XYCoordinates;
   width: number;
   height: number;
 }
 
-export type FighterSprites = {
-  [key in FighterAnimationType]: Record<FighterDirection, Sprite>;
+export type CharacterSprites = {
+  [key in CharacterAnimationType]: Record<CharacterDirection, Sprite>;
 };
 
-export type Character = keyof Omit<Config['character'], 'all'>;
+export type CharacterType = keyof Omit<Config['character'], 'all'>;
 
-export enum CharacterType {
-  Kenji = 'kenji',
-  Mack = 'mack',
-}
-
-export interface FighterParams {
+export interface CharacterParams {
   config: Config;
   canvas: CanvasRenderingContext2D;
-  character: Character;
+  character: CharacterType;
   playerName: string;
-  direction: FighterDirection;
+  direction: CharacterDirection;
   position: XYCoordinates;
   health?: number;
   width?: number;
   height?: number;
   velocity?: XYCoordinates;
-  attackBox?: Partial<FighterAttackBox>;
-  sprites?: FighterSprites;
+  attackBox?: Partial<CharacterAttackBox>;
+  sprites?: CharacterSprites;
   /** Current {@link Sprite} being rendered/animated on the screen. */
   currentSprite?: Sprite;
   commandListener?: InputListener;
@@ -54,11 +49,12 @@ export interface CharacterAttributes {
   jumpVelocity: number;
   runVelocity: number;
   maxHealth: number;
+  attackPower: number;
 }
 
-export interface Fighter
+export interface Character
   extends LogicalComponent,
-    Required<Omit<FighterParams, 'config' | 'canvas'>> {
+    Required<Omit<CharacterParams, 'config' | 'canvas'>> {
   /** state flags */
   isGettingHit: boolean;
   isAttacking: boolean;
@@ -78,7 +74,7 @@ export interface Fighter
   stopRunningRight(): void;
   jump(): void;
   attack(): void;
-  takeHit(): void;
+  takeHit(damage: number): void;
   start(): void;
   stop(): void;
   update(): void;

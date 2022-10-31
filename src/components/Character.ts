@@ -1,13 +1,13 @@
 import {
-  Character,
   CharacterAttributes,
-  Fighter as FighterInterface,
-  FighterAnimationType,
-  FighterAttackBox,
-  FighterDirection,
-  FighterParams,
-  FighterSprites,
-} from '../types/fighter.interface';
+  Character as CharacterInterface,
+  CharacterAnimationType,
+  CharacterAttackBox,
+  CharacterDirection,
+  CharacterParams,
+  CharacterSprites,
+  CharacterType,
+} from '../types/character.interface';
 import { XYCoordinates } from '../types/general-interfaces';
 import { InputListener } from '../types/input-listener.interface';
 import { Sprite as SpriteInterface } from '../types/sprite.interface';
@@ -15,15 +15,15 @@ import { Sprite } from '../renderables/Sprite';
 import { Config } from '../types/config.type';
 import { LogicalComponent } from 'src/types/logical-component.interface';
 
-export class Fighter implements FighterInterface, LogicalComponent {
-  character: Character;
+export class Character implements CharacterInterface, LogicalComponent {
+  character: CharacterType;
   playerName: string;
   position: XYCoordinates;
-  direction: FighterDirection;
+  direction: CharacterDirection;
   velocity: XYCoordinates;
-  attackBox: FighterAttackBox;
+  attackBox: CharacterAttackBox;
   commandListener: InputListener;
-  sprites: FighterSprites = {
+  sprites: CharacterSprites = {
     attack1: { left: null, right: null },
     death: { left: null, right: null },
     fall: { left: null, right: null },
@@ -37,9 +37,9 @@ export class Fighter implements FighterInterface, LogicalComponent {
   health: number;
 
   // height and width are used by engine for collision detection
-  /** Fighter's height. Internally fighter is represented by a rectangle. */
+  /** Character's height. Internally character is represented by a rectangle. */
   height: number;
-  /** Fighter's height. Internally fighter is represented by a rectangle. */
+  /** Character's height. Internally character is represented by a rectangle. */
   width: number;
 
   // CHARACTER ATTRIBUTES!
@@ -74,7 +74,7 @@ export class Fighter implements FighterInterface, LogicalComponent {
     height,
     width,
     health,
-  }: FighterParams) {
+  }: CharacterParams) {
     this.character = character;
     this.playerName = playerName;
     this.direction = direction;
@@ -132,6 +132,7 @@ export class Fighter implements FighterInterface, LogicalComponent {
 
   loadAttributes(config: Config) {
     this.attributes = {
+      attackPower: config.character[this.character].attackPower ?? 5,
       jumpVelocity: config.character[this.character].jumpVelocity ?? -10,
       runVelocity: config.character[this.character].runVelocity ?? 5,
       maxHealth: config.character[this.character].maxHealth ?? 100,
@@ -147,11 +148,11 @@ export class Fighter implements FighterInterface, LogicalComponent {
   }) {
     Object.entries(this.sprites).forEach(
       ([name, variations]: [
-        FighterAnimationType,
-        Record<FighterDirection, Sprite>,
+        CharacterAnimationType,
+        Record<CharacterDirection, Sprite>,
       ]) =>
         Object.entries(variations).forEach(
-          ([variation]: [FighterDirection, Sprite]) => {
+          ([variation]: [CharacterDirection, Sprite]) => {
             this.sprites[name][variation] = new Sprite({
               ...config.character[this.character].sprites[name][variation],
               position: this.position,
@@ -272,8 +273,8 @@ export class Fighter implements FighterInterface, LogicalComponent {
     this.updateMovement();
   }
 
-  takeHit() {
-    this.health -= 20;
+  takeHit(damage: number) {
+    this.health -= damage;
     if (this.health <= 0) {
       this.isDying = true;
     } else {

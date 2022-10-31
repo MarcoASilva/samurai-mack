@@ -1,6 +1,6 @@
 import { Hud } from 'src/core/Hud';
 import { Controller } from '../types/controller.interface';
-import { Fighter } from './fighter.interface';
+import { Character } from './character.interface';
 import { LogicalComponent } from './logical-component.interface';
 import { Renderable } from './renderable.interface';
 
@@ -14,7 +14,7 @@ export interface User {
 }
 
 export interface GameContextPlayers {
-  fighter: Fighter;
+  character: Character;
   controller: Controller;
   user: User;
 }
@@ -25,8 +25,8 @@ export interface GameContextSprites {
   background: Renderable;
   shop: Renderable;
   // remove players from sprites -> need to separate logical components from renderables
-  player1: Fighter;
-  player2: Fighter;
+  player1: Character;
+  player2: Character;
 }
 
 export interface GameContextHtmlElements {

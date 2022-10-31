@@ -1,4 +1,4 @@
-import { Fighter } from '../types/fighter.interface';
+import { Character } from '../types/character.interface';
 import Toastify from 'toastify-js';
 
 export class Utils {
@@ -6,8 +6,8 @@ export class Utils {
     rectangle1,
     rectangle2,
   }: {
-    rectangle1: Fighter;
-    rectangle2: Fighter;
+    rectangle1: Character;
+    rectangle2: Character;
   }) {
     return (
       rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
@@ -25,8 +25,8 @@ export class Utils {
     player1,
     player2,
   }: {
-    player1: Fighter;
-    player2: Fighter;
+    player1: Character;
+    player2: Character;
   }) {
     document.querySelector<HTMLDivElement>('#displayText').style.display =
       'flex';

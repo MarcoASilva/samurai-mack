@@ -1,12 +1,12 @@
-import { Fighter } from './fighter.interface';
+import { Character } from './character.interface';
 import { InputListener } from './input-listener.interface';
 
 export interface ControllerParams {
   commandListener: InputListener;
-  fighter: Fighter;
+  character: Character;
 }
 
 export interface Controller extends ControllerParams {
   commandListener: InputListener;
-  fighter: Fighter;
+  character: Character;
 }
