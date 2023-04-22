@@ -1,12 +1,12 @@
 import { Character } from './character.interface';
-import { InputListener } from './input-listener.interface';
+import { CommandListener } from './input-listener.interface';
 
 export interface ControllerParams {
-  commandListener: InputListener;
+  commandListener: CommandListener;
   character: Character;
 }
 
 export interface Controller extends ControllerParams {
-  commandListener: InputListener;
+  commandListener: CommandListener;
   character: Character;
 }

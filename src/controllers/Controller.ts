@@ -5,7 +5,7 @@ import {
 import { Character } from '../types/character.interface';
 import { Command } from '../types/general-interfaces';
 import {
-  InputListener,
+  CommandListener,
   InputListenerCallbacks,
 } from '../types/input-listener.interface';
 
@@ -19,7 +19,7 @@ interface ControllerKeys {
 }
 
 export class Controller implements ControllerInterface {
-  commandListener: InputListener;
+  commandListener: CommandListener;
   character: Character;
 
   private keys: ControllerKeys = {

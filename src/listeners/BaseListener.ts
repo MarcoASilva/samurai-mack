@@ -1,5 +1,9 @@
 import { Command } from '../types/general-interfaces';
-import { InputListener, ListenerMap } from '../types/input-listener.interface';
+import {
+  InputListener,
+  InputListenerCallback,
+  ListenerMap,
+} from '../types/input-listener.interface';
 
 export abstract class BaseListener implements InputListener {
   listeners: ListenerMap;
@@ -40,9 +44,9 @@ export abstract class BaseListener implements InputListener {
   }
 
   on(
-    command,
-    keyPressedCallback = this.ignore,
-    keyReleasedCallback = this.ignore,
+    command: Command,
+    keyPressedCallback: InputListenerCallback = this.ignore,
+    keyReleasedCallback: InputListenerCallback = this.ignore,
   ) {
     if (!Object.keys(this.listeners).includes(command)) {
       console.warn(

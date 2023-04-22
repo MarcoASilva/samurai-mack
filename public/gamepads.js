@@ -1,4 +1,4 @@
-const haveEvents = "ongamepadconnected" in window;
+const haveEvents = 'ongamepadconnected' in window;
 const controllers = {};
 
 function connecthandler(e) {
@@ -8,32 +8,32 @@ function connecthandler(e) {
 function addgamepad(gamepad) {
   controllers[gamepad.index] = gamepad;
 
-  const d = document.createElement("div");
-  d.setAttribute("id", `controller${gamepad.index}`);
+  const d = document.createElement('div');
+  d.setAttribute('id', `controller${gamepad.index}`);
 
-  const t = document.createElement("h1");
+  const t = document.createElement('h1');
   t.textContent = `gamepad: ${gamepad.id}`;
   d.appendChild(t);
 
-  const b = document.createElement("ul");
-  b.className = "buttons";
+  const b = document.createElement('ul');
+  b.className = 'buttons';
   gamepad.buttons.forEach((button, i) => {
-    const e = document.createElement("li");
-    e.className = "button";
-    e.textContent = "Button " + i;
+    const e = document.createElement('li');
+    e.className = 'button';
+    e.textContent = 'Button ' + i;
     b.appendChild(e);
   });
 
   d.appendChild(b);
 
-  const a = document.createElement("div");
-  a.className = "axes";
+  const a = document.createElement('div');
+  a.className = 'axes';
 
   gamepad.axes.forEach((axis, i) => {
-    const p = document.createElement("progress");
-    p.className = "axis";
-    p.setAttribute("max", "2");
-    p.setAttribute("value", "1");
+    const p = document.createElement('progress');
+    p.className = 'axis';
+    p.setAttribute('max', '2');
+    p.setAttribute('value', '1');
     p.textContent = i;
     a.appendChild(p);
   });
@@ -41,9 +41,9 @@ function addgamepad(gamepad) {
   d.appendChild(a);
 
   // See https://github.com/luser/gamepadtest/blob/master/index.html
-  const start = document.getElementById("start");
+  const start = document.getElementById('start');
   if (start) {
-    start.style.display = "none";
+    start.style.display = 'none';
   }
 
   document.body.appendChild(d);
@@ -68,30 +68,32 @@ function updateStatus() {
   for (const i in controllers) {
     const controller = controllers[i];
     const d = document.getElementById(`controller${i}`);
-    const buttons = d.getElementsByClassName("button");
+    const buttons = d.getElementsByClassName('button');
 
     controller.buttons.forEach((button, i) => {
       const b = buttons[i];
       let pressed = button === 1.0;
       let val = button;
 
-      if (typeof button === "object") {
+      if (typeof button === 'object') {
         pressed = val.pressed;
         val = val.value;
       }
 
       const pct = `${Math.round(val * 100)}%`;
       b.style.backgroundSize = `${pct} ${pct}`;
-      b.textContent = pressed ? `Button ${i} [PRESSED]` : `Button ${i}`;
-      b.style.color = pressed ? "#42f593" : "#2e2d33";
-      b.className = pressed ? "button pressed" : "button";
+      b.textContent = pressed
+        ? `Button ${i} [PRESSED] ${button}`
+        : `Button ${i}`;
+      b.style.color = pressed ? '#42f593' : '#2e2d33';
+      b.className = pressed ? 'button pressed' : 'button';
     });
 
-    const axes = d.getElementsByClassName("axis");
+    const axes = d.getElementsByClassName('axis');
     controller.axes.forEach((axis, i) => {
       const a = axes[i];
       a.textContent = `${i}: ${axis.toFixed(4)}`;
-      a.setAttribute("value", axis + 1);
+      a.setAttribute('value', axis + 1);
     });
   }
 
@@ -100,10 +102,10 @@ function updateStatus() {
 
 function scangamepads() {
   const gamepads = navigator.getGamepads();
-  document.querySelector("#noDevices").style.display = gamepads.filter(Boolean)
+  document.querySelector('#noDevices').style.display = gamepads.filter(Boolean)
     .length
-    ? "none"
-    : "block";
+    ? 'none'
+    : 'block';
   for (const gamepad of gamepads) {
     if (gamepad) {
       // Can be null if disconnected during the session
@@ -116,10 +118,10 @@ function scangamepads() {
   }
 }
 
-window.addEventListener("gamepadconnected", connecthandler);
-window.addEventListener("gamepaddisconnected", disconnecthandler);
+window.addEventListener('gamepadconnected', connecthandler);
+window.addEventListener('gamepaddisconnected', disconnecthandler);
 
 if (!haveEvents) {
-  document.querySelector("#noDevices").style.display = "block";
+  document.querySelector('#noDevices').style.display = 'block';
   setInterval(scangamepads, 500);
 }

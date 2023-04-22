@@ -1,5 +1,10 @@
 import { Command } from '../types/general-interfaces';
-import { InputListenerCallbacks } from '../types/input-listener.interface';
+import {
+  InputListenerCallbacks,
+  InputSource,
+  RawListener,
+  SourceType,
+} from '../types/input-listener.interface';
 import { BaseListener } from './BaseListener';
 
 type KeyboardCommands = {
@@ -21,9 +26,13 @@ export type KeyboardListenerParams = {
   [key in Command]?: string;
 };
 
-export class KeyboardListener extends BaseListener {
-  commands: KeyboardCommands;
-  eventMap: EventMap;
+export class KeyboardListener extends BaseListener implements InputSource {
+  private commands: KeyboardCommands;
+  private eventMap: EventMap;
+
+  type = SourceType.Keyboard;
+  raw: RawListener<SourceType.Keyboard>;
+
   listener: (this: any, event: KeyboardEvent) => void;
 
   constructor({

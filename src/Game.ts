@@ -20,7 +20,7 @@ export type GameEventListeners = {
 
 export const ignore: GameEventHandler<GameEvent> = () => void 0;
 
-export type Plugin = (context: GameContext) => GameContext;
+export type Plugin = (context: GameContext) => void;
 class Game {
   private config: Config;
   private listeners: GameEventListeners = {
@@ -65,9 +65,7 @@ class Game {
 
   private loop(): void {
     console.debug('loop still running');
-    this.plugins.forEach(
-      plugin => (this.engine.context = plugin(this.engine.context)),
-    );
+    this.plugins.forEach(plugin => plugin(this.engine.context));
     this.animationFrameRequest = window.requestAnimationFrame(
       this.loop.bind(this),
     );
