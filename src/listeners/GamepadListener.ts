@@ -1,6 +1,11 @@
 import { Command } from '../types/general-interfaces';
-import { InputListener } from '../types/input-listener.interface';
+import {
+  InputSource,
+  RawListener,
+  SourceType,
+} from '../types/input-listener.interface';
 import { BaseListener } from './BaseListener';
+import { RawGamepadListener } from './RawGamepadListener';
 
 type KeyboardCommands = {
   [key in Command]: number;
@@ -20,7 +25,12 @@ export interface GamepadListenerParams {
   gamepadIndex: number;
 }
 
-export class GamepadListener extends BaseListener implements InputListener {
+export class GamepadListener
+  extends BaseListener
+  implements InputSource<SourceType.Gamepad>
+{
+  type: SourceType.Gamepad = SourceType.Gamepad;
+  raw: RawListener<SourceType.Gamepad>;
   gamepadIndex: number;
   commands: KeyboardCommands;
   state: CommandStateDiff;
@@ -34,6 +44,8 @@ export class GamepadListener extends BaseListener implements InputListener {
     super();
 
     this.gamepadIndex = gamepadIndex;
+
+    this.raw = new RawGamepadListener({ gamepadIndex });
 
     this.commands = {
       left,
@@ -62,45 +74,22 @@ export class GamepadListener extends BaseListener implements InputListener {
     this.readButtonsRequestId;
   }
 
-  start() {
-    this._readButtons();
-  }
-
-  stop() {
-    this._stopReadingButtons();
-  }
-
   get gamepad() {
     return navigator.getGamepads()[this.gamepadIndex];
   }
 
-  setGamepad({ gamepadIndex, config }: GamepadListenerParams) {
-    this.gamepadIndex = gamepadIndex;
-    if (config) {
-      Object.keys(this.commands).forEach(
-        key => (this.commands[key] = config[key]),
-      );
-    }
-    console.info(
-      'New Gamepad set:',
-      gamepadIndex,
-      this.gamepad.id,
-      this.gamepad,
-    );
-  }
-
-  _readButtons() {
+  private readButtons() {
     Object.assign(this.state.previous, this.state.current);
 
     this.axisXValue = Math.round(this.gamepad?.axes?.[0] * 100);
 
     this.state.current.left = Boolean(
       this.gamepad?.buttons?.[this.commands?.left]?.pressed ||
-        this.axisXValue < 50,
+        this.axisXValue < -50,
     );
     this.state.current.right = Boolean(
       this.gamepad?.buttons?.[this.commands?.right]?.pressed ||
-        this.axisXValue < -50,
+        this.axisXValue > 50,
     );
     this.state.current.jump = Boolean(
       this.gamepad?.buttons?.[this.commands?.jump]?.pressed,
@@ -117,32 +106,41 @@ export class GamepadListener extends BaseListener implements InputListener {
         if (value && !this.state.current[key]) {
           this.listeners[key].release(key);
         }
-
-        // if (this.axisXState.current > 50) {
-        //   this.listeners.right.press();
-        // }
-        // if (this.axisXState.current < -50) {
-        //   this.listeners.left.press();
-        // }
-        // if (this.axisXState.previous > 50 && this.axisXState.current < 50) {
-        //   this.listeners.right.release();
-        // }
-        // if (this.axisXState.previous < -50 && this.axisXState.current > -50) {
-        //   this.listeners.left.release();
-        // }
-
-        // other changes does not matter now:
-        // pressed => pressed
-        // released => released
       },
     );
 
+    this.raw.read();
+
     this.readButtonsRequestId = window.requestAnimationFrame(
-      this._readButtons.bind(this),
+      this.readButtons.bind(this),
     );
   }
 
-  _stopReadingButtons() {
+  private stopReadingButtons() {
     window.cancelAnimationFrame(this.readButtonsRequestId);
+  }
+
+  start() {
+    this.readButtons();
+  }
+
+  stop() {
+    this.stopReadingButtons();
+  }
+
+  setGamepad({ gamepadIndex, config }: GamepadListenerParams) {
+    this.gamepadIndex = gamepadIndex;
+    if (config) {
+      Object.keys(this.commands).forEach(
+        key => (this.commands[key] = config[key]),
+      );
+    }
+    this.raw.setGamepadIndex(gamepadIndex);
+    console.info(
+      'New Gamepad set:',
+      gamepadIndex,
+      this.gamepad.id,
+      this.gamepad,
+    );
   }
 }

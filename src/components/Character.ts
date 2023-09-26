@@ -59,6 +59,8 @@ export class Character implements CharacterInterface, LogicalComponent {
     right: 0,
   };
 
+  private baseY: number;
+
   constructor({
     config,
     canvas,
@@ -128,6 +130,8 @@ export class Character implements CharacterInterface, LogicalComponent {
     }
 
     this.listenCommands(this.commandListener);
+
+    this.baseY = this.stage.floorY - this.height;
   }
 
   loadAttributes(config: Config) {
@@ -203,7 +207,15 @@ export class Character implements CharacterInterface, LogicalComponent {
   }
 
   jump() {
-    this.velocity.y = this.attributes.jumpVelocity;
+    // this.velocity.y = this.attributes.jumpVelocity;
+    // this.velocity.y =
+    //   this.velocity.y >= 0 ? this.attributes.jumpVelocity : this.velocity.y;
+    this.velocity.y =
+      this.position.y === this.baseY
+        ? this.attributes.jumpVelocity
+        : this.velocity.y >= 5
+        ? this.attributes.jumpVelocity
+        : this.velocity.y;
   }
 
   attack() {
@@ -255,7 +267,7 @@ export class Character implements CharacterInterface, LogicalComponent {
   applyGravity() {
     if (this.position.y + this.height + this.velocity.y >= this.stage.floorY) {
       this.velocity.y = 0;
-      this.position.y = 330;
+      this.position.y = this.baseY;
     } else {
       this.velocity.y += this.game.gravity;
     }
