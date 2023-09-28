@@ -3,8 +3,6 @@ import {
   InputListener,
   InputListenerCallback,
   ListenerMap,
-  RawListener,
-  SourceType,
 } from '../types/input-listener.interface';
 
 export abstract class BaseListener implements InputListener {

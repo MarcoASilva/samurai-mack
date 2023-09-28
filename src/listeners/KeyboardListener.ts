@@ -31,10 +31,11 @@ export class KeyboardListener
   extends BaseListener
   implements InputSource<SourceType.Keyboard>
 {
-  type: SourceType.Keyboard = SourceType.Keyboard;
-  raw: RawListener<SourceType.Keyboard>;
   private commands: KeyboardCommands;
   private eventMap: EventMap;
+
+  type: SourceType.Keyboard = SourceType.Keyboard;
+  raw: RawListener<SourceType.Keyboard>;
 
   constructor({
     left = '',

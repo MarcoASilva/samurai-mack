@@ -19,7 +19,7 @@ interface ControllerKeys {
   };
 }
 
-export class Controller<T extends SourceType> implements ControllerInterface {
+export class Controller implements ControllerInterface {
   commandListener: CommandListener;
   character: Character;
 
