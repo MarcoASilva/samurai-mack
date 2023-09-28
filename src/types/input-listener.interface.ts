@@ -30,13 +30,6 @@ export enum SourceType {
   Keyboard = 'Keyboard',
 }
 
-export type RawListenerCallback<T extends SourceType> =
-  T extends SourceType.Gamepad
-    ? (button: number) => void
-    : T extends SourceType.Keyboard
-    ? (button: string) => void
-    : never;
-
 export type GamepadRawListenerListenFn = (
   button: number,
   press: (button: number) => void,

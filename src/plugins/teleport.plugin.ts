@@ -1,9 +1,4 @@
-import { BaseListener } from '../listeners/BaseListener';
-import {
-  InputSource,
-  RawListener,
-  SourceType,
-} from '../types/input-listener.interface';
+import { InputSource, SourceType } from '../types/input-listener.interface';
 import { Plugin } from '../Game';
 
 export const teleportPower: Plugin = context => {

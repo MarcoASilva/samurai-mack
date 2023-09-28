@@ -1,6 +1,5 @@
-import { GameEvent, Plugin, setup } from './Game';
+import { Plugin } from './Game';
 import { Sprite } from './renderables/Sprite';
-import { RawListener, SourceType } from './types/input-listener.interface';
 
 export const contextLoggerPlugin: Plugin = context => {
   console.log(context);

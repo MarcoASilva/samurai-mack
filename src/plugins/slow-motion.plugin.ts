@@ -1,8 +1,4 @@
-import {
-  RawListener,
-  RawListenerCallback,
-  SourceType,
-} from '../types/input-listener.interface';
+import { InputSource, SourceType } from '../types/input-listener.interface';
 import { Plugin } from '../Game';
 
 export const slowMotionPlugin: Plugin = context => {
@@ -17,8 +13,8 @@ export const slowMotionPlugin: Plugin = context => {
 
   const gamepadInputListener: {
     button: number;
-    press: RawListenerCallback<SourceType.Gamepad>;
-    release: RawListenerCallback<SourceType.Gamepad>;
+    press: (button: number) => void;
+    release: (button: number) => void;
   } = {
     button: 7,
     press: () => {
@@ -40,15 +36,21 @@ export const slowMotionPlugin: Plugin = context => {
     },
   };
 
+  // Plugin only for gamepad users for example...
   context.players.forEach(player =>
-    player.controller.commandListener.sources.forEach(source => {
-      if (source.type === SourceType.Gamepad) {
-        (source.raw as RawListener<SourceType.Gamepad>).listen(
-          gamepadInputListener.button,
-          gamepadInputListener.press,
-          gamepadInputListener.release,
-        );
-      }
-    }),
+    player.controller.commandListener.sources
+      .filter(
+        (source): source is InputSource<SourceType.Gamepad> =>
+          source.type === SourceType.Gamepad,
+      )
+      .forEach(source => {
+        if (source.type === SourceType.Gamepad) {
+          source.raw.listen(
+            gamepadInputListener.button,
+            gamepadInputListener.press,
+            gamepadInputListener.release,
+          );
+        }
+      }),
   );
 };

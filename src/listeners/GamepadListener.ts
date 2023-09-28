@@ -36,7 +36,6 @@ export class GamepadListener
   state: CommandStateDiff;
   readButtonsRequestId: number;
   axisXValue: number;
-  raw: RawListener<SourceType.Gamepad>;
 
   constructor({
     config: { left = -1, right = -2, jump = -3, attack = -4 },
