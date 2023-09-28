@@ -2,6 +2,7 @@ import { Command } from '../types/general-interfaces';
 import {
   InputSource,
   CommandListener as CommandListenerInterface,
+  SourceType,
 } from '../types/input-listener.interface';
 import { BaseListener } from './BaseListener';
 
@@ -9,9 +10,9 @@ export class CommandListener
   extends BaseListener
   implements CommandListenerInterface
 {
-  sources: InputSource[];
+  sources: InputSource<SourceType>[];
 
-  constructor({ sources }: { sources: InputSource[] }) {
+  constructor({ sources }: { sources: InputSource<SourceType>[] }) {
     super();
 
     this.sources = sources;

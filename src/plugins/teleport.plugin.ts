@@ -1,12 +1,19 @@
-import { RawListener, SourceType } from 'src/types/input-listener.interface';
+import { BaseListener } from '../listeners/BaseListener';
+import {
+  InputSource,
+  RawListener,
+  SourceType,
+} from '../types/input-listener.interface';
 import { Plugin } from '../Game';
 
 export const teleportPower: Plugin = context => {
-  const raw = context.players[0].controller.commandListener.sources.find(
-    s => s.type === 'Gamepad',
-  ).raw as RawListener<SourceType.Gamepad>;
+  const rawGamePadListener =
+    context.players[0].controller.commandListener.sources.find(
+      (s): s is InputSource<SourceType.Gamepad> =>
+        s.type === SourceType.Gamepad,
+    ).raw;
 
-  raw.listen(
+  rawGamePadListener.listen(
     4,
     () => {
       context.players[0].character.position.x =
@@ -15,8 +22,25 @@ export const teleportPower: Plugin = context => {
     undefined,
   );
 
-  raw.listen(
+  rawGamePadListener.listen(
     5,
+    () => {
+      context.players[0].character.position.x =
+        context.players[0].character.position.x + 400;
+    },
+    undefined,
+  );
+
+  console.log(context.players[0].controller.commandListener.sources);
+
+  const rawKeyboardListener =
+    context.players[0].controller.commandListener.sources.find(
+      (s): s is InputSource<SourceType.Keyboard> =>
+        s.type === SourceType.Keyboard,
+    ).raw;
+
+  rawKeyboardListener.listen(
+    'h',
     () => {
       context.players[0].character.position.x =
         context.players[0].character.position.x + 400;

@@ -39,14 +39,14 @@ export type RawListenerCallback<T extends SourceType> =
 
 export type GamepadRawListenerListenFn = (
   button: number,
-  press: RawListenerCallback<SourceType.Gamepad>,
-  release: RawListenerCallback<SourceType.Gamepad>,
+  press: (button: number) => void,
+  release: (button: number) => void,
 ) => void;
 
 export type KeyboardRawListenerListenFn = (
-  button: string,
-  press: RawListenerCallback<SourceType.Keyboard>,
-  release: RawListenerCallback<SourceType.Keyboard>,
+  key: string,
+  press: (key: string) => void,
+  release: (key: string) => void,
 ) => void;
 
 export type RawListenerType<T extends SourceType> = T extends SourceType.Gamepad
@@ -64,10 +64,10 @@ export interface RawListener<T extends SourceType> {
     : never;
 }
 
-export interface InputSource extends InputListener {
-  type: SourceType;
-  raw: RawListener<SourceType>;
+export interface InputSource<T extends SourceType> extends InputListener {
+  type: T;
+  raw: RawListener<T>;
 }
 export interface CommandListener extends InputListener {
-  sources: InputSource[];
+  sources: InputSource<SourceType>[];
 }

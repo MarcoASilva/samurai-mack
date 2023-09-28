@@ -25,8 +25,12 @@ export interface GamepadListenerParams {
   gamepadIndex: number;
 }
 
-export class GamepadListener extends BaseListener implements InputSource {
-  type = SourceType.Gamepad;
+export class GamepadListener
+  extends BaseListener
+  implements InputSource<SourceType.Gamepad>
+{
+  type: SourceType.Gamepad = SourceType.Gamepad;
+  raw: RawListener<SourceType.Gamepad>;
   gamepadIndex: number;
   commands: KeyboardCommands;
   state: CommandStateDiff;

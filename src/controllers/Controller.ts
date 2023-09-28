@@ -7,6 +7,7 @@ import { Command } from '../types/general-interfaces';
 import {
   CommandListener,
   InputListenerCallbacks,
+  SourceType,
 } from '../types/input-listener.interface';
 
 interface ControllerKeys {
