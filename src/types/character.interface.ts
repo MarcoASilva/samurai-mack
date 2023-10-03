@@ -42,6 +42,10 @@ export interface CharacterParams {
   sprites?: CharacterSprites;
   /** Current {@link Sprite} being rendered/animated on the screen. */
   currentSprite?: Sprite;
+  /**
+   * if you don't want to use controllers
+   * you can bind characters directly to an InputListener
+   */
   commandListener?: InputListener;
 }
 

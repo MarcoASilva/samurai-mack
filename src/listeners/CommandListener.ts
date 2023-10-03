@@ -6,6 +6,9 @@ import {
 } from '../types/input-listener.interface';
 import { BaseListener } from './BaseListener';
 
+/**
+ * `CommandListener` extends **BaseListener** which only supports **one callback registered** at a time. If you change it to allow multiple callbacks to be registered, make sure to don't pass the `CommandListener` to both `Controller` and `Character` or it will have duplicate commands being processed by `Character` because `Character`'s methods `startRunningLeft`, `stopRunningLeft`, `startRunningRight`, `stopRunningRight`, `jump` and `attack` would be called **twice**.
+ */
 export class CommandListener
   extends BaseListener
   implements CommandListenerInterface

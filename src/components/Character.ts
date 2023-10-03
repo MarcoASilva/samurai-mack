@@ -60,7 +60,10 @@ export class Character implements CharacterInterface, LogicalComponent {
   };
 
   private baseY: number;
-
+  /**
+   *
+   * @param commandListener If you don't want to use `Controller` for binding `InputListener`s <-> `Character` you can pass in an `InputListener` (preferably a `CommandListener` [because it aggregates many `InputListener`s if needed]). So `Character` will start listening for commands on its own.
+   */
   constructor({
     config,
     canvas,
@@ -128,8 +131,6 @@ export class Character implements CharacterInterface, LogicalComponent {
       this.commandListener = commandListener;
       this.listenCommands(this.commandListener);
     }
-
-    this.listenCommands(this.commandListener);
 
     this.baseY = this.stage.floorY - this.height;
   }
@@ -213,7 +214,8 @@ export class Character implements CharacterInterface, LogicalComponent {
     this.velocity.y =
       this.position.y === this.baseY
         ? this.attributes.jumpVelocity
-        : this.velocity.y >= 5
+        : // only allow to jump again once the character has fallen a bit
+        this.velocity.y >= 5
         ? this.attributes.jumpVelocity
         : this.velocity.y;
   }
